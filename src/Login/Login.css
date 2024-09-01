@@ -1,0 +1,63 @@
+.full-height-log {
+    height: 95vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body {
+    background-color: var(--background-color) /* Set the background color of the body to light gray */
+}
+
+.center-rectangle-log {
+    background-color: var(--form-box-color); /* Set the background color of the rectangle to white */
+    padding: 40px; /* Decrease the padding to make the rectangle smaller */
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    width: 500px; /* Set a smaller width for the rectangle */
+    max-width: 90%; /* Ensure the rectangle doesn't exceed 90% of the viewport width */
+    text-align: center; /* Center-align text */
+}
+
+.center-rectangle-log h2 {
+    margin-bottom: 5vh; /* Adjust margin for better spacing */
+    font-size: 32px; /* Increase the font size of the heading */
+    color: var(--text-color);
+}
+
+.center-rectangle-log input,
+.center-rectangle-log button {
+    font-size: 18px; /* Increase the font size of the inputs and buttons */
+    padding: 10px; /* Increase the padding of the inputs and buttons */
+    width: 100%; /* Make the input fields take up full width */
+    margin-bottom: 10px; /* Add some space between the inputs */
+}
+.register-section-log,p{
+    color: var(--text-color);
+}
+
+
+.button-container-log {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 18px;
+}
+
+#registerbtn-log{
+    font-size: 22px;
+    height: 50px;
+    width: 180px;
+}
+
+.register-section-log {
+    text-align: right;
+}
+
+#register-link-log {
+    font-size: 18px;
+    padding: 10px;
+    height: 40px;
+    width: 110px;
+}
