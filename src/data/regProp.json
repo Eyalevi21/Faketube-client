@@ -1,0 +1,44 @@
+[
+    {
+      "label": "User Name",
+      "id": "username",
+      "type": "text",
+      "initialValue": "User Name",
+      "required": true,
+      "feedback": "Looks good!"
+    },
+    {
+      "label": "Password",
+      "id": "password",
+      "type": "text",
+      "initialValue": "Password",
+      "required": true,
+      "feedback": "Looks good!"
+    },
+    {
+      "label": "Verify Password",
+      "id": "verifypass",
+      "type": "text",
+      "initialValue": "Verify Password",
+      "required": true,
+      "feedback": "Please provide valid password"
+    },
+    {
+      "label": "Nick Name",
+      "id": "nickname",
+      "type": "text",
+      "initialValue": "Nick Name",
+      "required": true,
+      "feedback": "Looks good!"
+    },
+    {
+      "label": "Profile Picture",
+      "id": "profile",
+      "type": "file",
+      "initialValue": "",
+      "required": true,
+      "feedback": "Please select a valid photo."
+    }
+    
+  ]
+  

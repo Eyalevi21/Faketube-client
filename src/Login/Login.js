@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
     const [profilePicture, setProfilePicture] = useState(null); // State to store the profile picture
 
     const handleUserChange = (e) => {
@@ -30,7 +32,7 @@ function Login() {
     };
 
     const handleRegClick = () => {
-        
+        navigate('/register');
     };
 
     const handleSubmit = async (event) => {
@@ -50,6 +52,7 @@ function Login() {
         if (res.ok) {
             const result = await res.json();
             setProfilePicture(result.profilePicture); // Assuming the server returns the profile picture
+            navigate('/welcome')
         } else {
             const errorResult = await res.json();
             setError(errorResult.message || 'Login failed');
