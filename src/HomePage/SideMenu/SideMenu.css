@@ -1,0 +1,59 @@
+.side-menu {
+    background-color: var(--side-menu-background-color);
+    height: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    box-shadow: 2px 0 2px var(--box-shadow-color);
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    position: fixed;
+    top: 80px;
+    
+}
+
+.menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: var(--background-color) 0.3s;
+    color:whitesmoke;
+}
+
+.menu-item:hover {
+    color: #f7971d; /* Text color on hover (yellow) */
+}
+
+.menu-item .icon {
+    font-size: 24px;
+    margin-right: 20px;
+    width: 24px; /* Set a fixed width */
+    height: 24px; /* Set a fixed height */
+}
+
+.icon-home::before,
+.icon-you::before {
+    display: inline-block;
+    width: 40px; /* Ensure the icon fits within its container */
+    height: 40px; /* Ensure the icon fits within its container */
+    filter: brightness(0) invert(1); /* Make the icon white */
+
+}
+
+/* Additional styles for fine-tuning */
+.icon-home::before {
+    content: url('../../data/icons/home.svg');
+}
+
+.icon-you::before {
+    content: url('../../data/icons/you.svg');
+}
+.menu-item:hover .icon-home::before,
+.menu-item:hover .icon-you::before {
+    filter: invert(52%) sepia(85%) saturate(334%) hue-rotate(354deg) brightness(104%) contrast(101%);
+}
+
+
+

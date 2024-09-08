@@ -2,12 +2,11 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
-function Login() {
+function Login({userData, setUserData}) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const [profilePicture, setProfilePicture] = useState(null); // State to store the profile picture
 
     const handleUserChange = (e) => {
         setUsername(e.target.value);
@@ -41,23 +40,38 @@ function Login() {
             username: username,
             password: password
         };
-        const res = await fetch('http://localhost:880/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        });
-
-        if (res.ok) {
-            const result = await res.json();
-            setProfilePicture(result.profilePicture); // Assuming the server returns the profile picture
-            navigate('/welcome')
-        } else {
-            const errorResult = await res.json();
-            setError(errorResult.message || 'Login failed');
+        
+        try {
+            const res = await fetch('http://localhost:880/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            console.log('Response:', res);
+            if (res.ok) {
+                const result = await res.json();
+                console.log('Response:', result);
+                // Set the user data (username, password, and profile)
+               const user = { username: result.username,
+                    nickname: result.nickname, // Optionally store this, depending on your app logic
+                    profile: result.profilePicture}            
+                    {setUserData(user)};
+           
+    
+                // Navigate to the home page
+                navigate('/');
+            } else {
+                const errorResult = await res.json();
+                setError(errorResult.message || 'Login failed');
+            }
+        } catch (error) {
+            console.log("the error: ", error)
+            setError('Something went wrong. Please try again.');
         }
     };
+    
 
     return (
         <div className="full-height-log">
@@ -96,13 +110,7 @@ function Login() {
                             <p>Doesn't have an account?</p>
                         </div>
                     </div>
-                </form>
-                {profilePicture && (
-                    <div className="profile-picture-container">
-                        <h3>Welcome, {username}!</h3>
-                        <img src={profilePicture} alt="Profile" className="profile-picture" />
-                    </div>
-                )}
+                </form>        
             </div>
         </div>
     );

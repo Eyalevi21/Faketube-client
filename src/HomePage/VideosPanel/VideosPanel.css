@@ -1,0 +1,10 @@
+/* VideosPanel.css */
+.VideosPanel {
+    display: flex; /* Use flexbox for horizontal layout */
+    flex-wrap: wrap; /* Allow wrapping of video items */
+    justify-content: center; /* Horizontally distribute items with space around */
+    padding: 100px; /* Add padding to the container */
+    gap: 80px;
+    margin-left: 60px;
+  }
+  

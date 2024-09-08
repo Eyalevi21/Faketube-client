@@ -1,0 +1,26 @@
+.UploadButton {
+    width: 12%;
+    padding: 0 15px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    color: whitesmoke;
+
+}
+
+.UploadButton:hover {
+    color: #f7971d; /* Text color on hover (yellow) */
+    filter: invert(52%) sepia(85%) saturate(334%) hue-rotate(354deg) brightness(104%) contrast(101%);
+}
+
+.icon-upload::before {
+    filter: brightness(0) invert(1); /* Make the icon white */
+    display: block; 
+    margin-top: 2px; 
+    content: url('../../data/icons/upload.svg');
+
+}
+
+

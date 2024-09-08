@@ -1,0 +1,27 @@
+.LoginButton {
+    width: 12%;
+    padding: 0 15px;
+    border-radius: 10px;
+    margin-right: 1%;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    color: whitesmoke;
+}
+
+.LoginButton:hover {
+    color: #f7971d; /* Text color on hover (yellow) */
+    filter: invert(52%) sepia(85%) saturate(334%) hue-rotate(354deg) brightness(104%) contrast(101%);
+    cursor: pointer;
+}
+
+.icon-login::before {
+    filter: brightness(0) invert(1); /* Make the icon white */
+    display: block; 
+    margin-top: 2px; 
+    content: url('../../data/icons/login.svg');
+
+}
+
+

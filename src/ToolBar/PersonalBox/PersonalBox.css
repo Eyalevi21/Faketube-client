@@ -1,0 +1,68 @@
+.PersonalBox {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: row; /* Align items horizontally */
+    padding: 10px;
+    margin-left: 20px; /* Ensure some spacing from the upload button */
+    right: 0;
+  }
+  
+  .UserProfile {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative; /* Ensure that the button is positioned relative to this */
+    flex-direction: column; /* Stack image and text vertically */
+  }
+  
+  .UserImage {
+    width: 50px; /* Adjust size if necessary */
+    height: 50px; /* Adjust size if necessary */
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 50px; /* Adjust margin to move image down */
+    margin-bottom: 5px; /* Adjust spacing if necessary */
+    margin-right: 10px; /* Adjust spacing if necessary */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+  }
+  
+  .GreetingText {
+    font-size: 14px; /* Adjust font size if necessary */
+    font-weight: bold;
+    margin-top: 5px;
+    color: whitesmoke;
+    margin-bottom: 10px; /* Adjust spacing to separate from buttons */
+  }
+  
+  .ButtonContainer {
+    display: flex;
+    flex-direction: row; /* Place buttons side by side */
+    gap: 10px; /* Space between buttons */
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .ButtonContainer.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .Button {
+    padding: 10px 20px; /* Make buttons bigger */
+    font-size: 16px; /* Increase font size */
+    color: #fff;
+    background-color: #6c757d; /* Change to grey */
+    border: none;
+    border-radius: 5px; /* Slightly larger border radius */
+    cursor: pointer;
+    outline: none;
+    z-index: 10;
+  }
+  
+  .Button:hover {
+    background-color: #5a6268; /* Slightly darker grey on hover */
+  }
+  

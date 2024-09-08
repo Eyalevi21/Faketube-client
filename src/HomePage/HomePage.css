@@ -1,0 +1,7 @@
+.HomePage {
+  background-color: var(--element-background-color);
+  color: var(--text-color);
+}
+.home-page-con{
+  background-color: var(--element-background-color);
+}

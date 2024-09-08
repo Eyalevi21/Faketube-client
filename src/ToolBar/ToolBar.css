@@ -1,0 +1,42 @@
+.ToolBar {
+    display: flex;
+    justify-content: space-between; /* Change to space-between to align items on the ends */
+    align-items: center;
+    height: 80px;
+    background-color: var(--toolbar-backgroung-color);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 0 2px var(--element-background-color);
+    padding: 0 20px; /* Add some padding to the left and right */
+}
+.centerContainer {
+    display: flex;
+    justify-content: center;
+    width: auto;
+    flex-grow: 1; /* Allow it to grow and take available space */
+}
+
+.WebLogo {
+    display: inline-block;
+    justify-content: left;
+    height: 100%;
+    max-width: 200px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.WebLogo img {
+    padding: 5px;
+    padding-left: 10px;
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    width: auto;
+}
+.darkModeContainer {
+    margin-top: 20px;
+    display: flex;
+    align-items: center; /* Vertically center */
+}
