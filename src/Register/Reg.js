@@ -58,9 +58,11 @@ function Reg() {
     });
 
     if (res.ok) {
-        navigate('/welcome')
-    } else {
-
+        navigate('/')
+    } else if(res.status == 409){
+      alert('Username already taken');
+    } else{
+      alert("something went wrong")
     }
   }
 
