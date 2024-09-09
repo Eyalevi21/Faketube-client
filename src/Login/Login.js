@@ -42,7 +42,7 @@ function Login({userData, setUserData}) {
         };
         
         try {
-            const res = await fetch('http://localhost:880/login', {
+            const res = await fetch('http://localhost:880/api/users', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

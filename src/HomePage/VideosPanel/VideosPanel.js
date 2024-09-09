@@ -3,10 +3,10 @@ import VideoListResults from '../VideoListResults/VideoListResults';
 
 
 
-function VideosPanel({videos, setUserData, videoList, setVideoList}) {  
+function VideosPanel({videos, setUserData}) {  
 
   return (   
-    <VideoListResults videos={videos} setUserData={setUserData} videoList={videoList} setVideoList={setVideoList}/>
+    <VideoListResults videos={videos} setUserData={setUserData}/>
   );
 }
 
