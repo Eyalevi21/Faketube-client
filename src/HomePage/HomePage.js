@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import ToolBar from '../ToolBar/ToolBar';
 import VideosPanel from './VideosPanel/VideosPanel';
 import SideMenu from './SideMenu/SideMenu';
