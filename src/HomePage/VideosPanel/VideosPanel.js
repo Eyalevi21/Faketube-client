@@ -1,5 +1,3 @@
-import VideoItem from '../videoItem/VideoItem';
-import React, { useState } from 'react';
 import './VideosPanel.css'; // Import CSS file for styling
 import VideoListResults from '../VideoListResults/VideoListResults';
 

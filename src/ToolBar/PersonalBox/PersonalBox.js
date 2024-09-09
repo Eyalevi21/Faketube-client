@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './PersonalBox.css';
 import { useNavigate } from 'react-router-dom';
-import { TbSettingsPause } from 'react-icons/tb';
 
 const PersonalBox = ({ userData, setUserData }) => {
   const [showButtons, setShowButtons] = useState(false);
