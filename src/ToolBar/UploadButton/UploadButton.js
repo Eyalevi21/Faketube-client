@@ -1,13 +1,13 @@
 import React from 'react';
 import './UploadButton.css'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 
-function UploadButton({ videoList, userData }) {
+function UploadButton({ userData }) {
     const navigate = useNavigate();
     const handleUploadClick = () => {
-        navigate('/Upload' ,{ state: { userData, videoList }}); 
+        navigate('/Upload' ,{ state: { userData }}); 
     };
     return (
         <div className="UploadButton">

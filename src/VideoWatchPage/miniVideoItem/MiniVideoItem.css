@@ -1,0 +1,21 @@
+.card {
+    display: flex;
+    width: 350px;
+    cursor: pointer;
+}
+
+.text-author{
+    font-size: 15px;
+    color: var(--mini-video-text-color);
+}
+.MiniVideoItem {
+    flex: 1 1 20px; /* Set width for each card */
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .card-img-top-mini {
+    width: 100%;
+    height: 95px;
+  }

@@ -8,12 +8,12 @@ import PersonalBox from './PersonalBox/PersonalBox';
 import LoginButton from './LoginButton/LoginButton'
 import DarkMode from '../DarkMode/DarkMode'
 
-function ToolBar({doSearch, videoList, userData, setUserData, setVideoList, theme, toggleTheme, setSearchResult}) {
+function ToolBar({doSearch, userData, setUserData, theme, toggleTheme, setSearchResult}) {
   const navigate = useNavigate();
   const onFakeTubeClick = ()=>{
     navigate('/');
   }
-  console.log("toolbar: ", videoList)
+  
   if (!userData) {
     return (
       <div className="ToolBar">
@@ -21,9 +21,9 @@ function ToolBar({doSearch, videoList, userData, setUserData, setVideoList, them
               <img src={logo} alt='Website Logo'></img>
           </div>
           <div className='centerContainer'>
-              <SearchBar doSearch={doSearch} setSearchResult={setSearchResult} videoList={videoList} />
+              <SearchBar doSearch={doSearch} setSearchResult={setSearchResult} />
           </div>
-          <LoginButton videoList={videoList} userData={userData} setUserData={setUserData}/>
+          <LoginButton userData={userData} setUserData={setUserData}/>
           <DarkMode theme={theme} toggleTheme={toggleTheme}/>  
       </div>
     );
@@ -36,9 +36,9 @@ function ToolBar({doSearch, videoList, userData, setUserData, setVideoList, them
               <img src={logo} alt='Website Logo' onClick={onFakeTubeClick}></img>
           </div>
           <div className='centerContainer'>
-              <SearchBar doSearch={doSearch} setSearchResult={setSearchResult} videoList={videoList} />
+              <SearchBar doSearch={doSearch} setSearchResult={setSearchResult} />
           </div>
-          <PersonalBox videoList={videoList} userData={userData} setUserData={setUserData} />
+          <PersonalBox userData={userData} setUserData={setUserData} />
           <DarkMode theme={theme} toggleTheme={toggleTheme}/>            
       </div>
     );

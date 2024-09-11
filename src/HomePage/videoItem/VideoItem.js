@@ -8,7 +8,7 @@ function VideoItem({ vid, imageName, title, artist, views, date }) {
     //imageName is what the path of the photo in mongoDB
     const navigate = useNavigate();
     function onVideoClick() {
-        console.log('you did it');
+        navigate(`/videos/${vid}`);
     }
     return (
         <div className="col-lg-3 col-md-4 col-sm-6">

@@ -3,16 +3,18 @@ import './SearchBar.css';
 import { useNavigate } from "react-router-dom";
 
 
-  function SearchBar({ doSearch, setSearchResult, videoList }) {
+  function SearchBar({ doSearch, setSearchResult }) {
     const navigate = useNavigate();
     const searchBox = useRef(null);
     const originalListRef = useRef(null);
+    /*
     useEffect(() => {
       // Store the initial video list in the originalListRef only once
       if (!originalListRef.current) {
         originalListRef.current = videoList;
       }
     }, [videoList]);
+    */
     const handleSearch = () => {
       navigate('/');
       const filteredList = doSearch(searchBox.current.value, originalListRef.current);
