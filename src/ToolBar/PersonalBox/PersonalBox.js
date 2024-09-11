@@ -23,7 +23,7 @@ const PersonalBox = ({ userData, setUserData }) => {
     <div className="PersonalBox">
         <div className="GreetingText">Hello, {userData.nickname}!</div>
       <div className="UserProfile" onClick={handleProfileClick}>
-        <img src={`${userData.profile}`} alt={userData.nickname} className="UserImage" />
+        <img src={`data:image/png;base64,${userData.profile}`} alt={userData.nickname} className="UserImage" />
             <div className={`ButtonContainer ${showButtons ? 'show' : ''}`}>
         <button className="Button" onClick={handleSignOutClick}>
           Sign Out

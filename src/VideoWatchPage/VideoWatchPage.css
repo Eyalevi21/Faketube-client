@@ -1,0 +1,123 @@
+.main-content {
+    display: flex;
+    margin-top: 90px;
+    /* Increased top margin to leave more space for the search bar */
+    width: 99%;
+}
+
+.video-watch-page {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
+    box-sizing: border-box;
+    width: 80%;
+    /* leave space for the right video menu */
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    background-color: var(--element-background-color);
+    border: 1px solid var(--element-background-color);
+    padding: 5px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.video-container video {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.related-videos {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--element-background-color);
+    box-sizing: border-box;
+    overflow-y: auto;
+    margin-top: 50px;
+}
+
+.video-actions button {
+    margin-right: 10px;
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: var(--text-color);
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.video-actions button:hover {
+    background-color: #0056b3;
+}
+
+.comments-section {
+    background-color: var(--element-background-color);
+    border: 1px solid #ddd;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+textarea:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.comments-section button {
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: var(--text-color);
+    cursor: pointer;
+    border-radius: 5px;
+    float: right;
+}
+
+.comments-section button:hover {
+    background-color: #0056b3;
+}
+.comments-section{
+    color: var(--text-color);
+}
+
+
+.h1-font, h1 {
+    font-size: 25px;
+    color: var(--text-color);
+}
+
+.views-font, p {
+    font-size: 12px;
+}
+.description-font, p {
+    font-size: 17px;
+}
+
+.icon-edit {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url('../data/icons/edit.svg');
+    background-size: cover;
+    cursor: pointer;
+    margin-left: 10px; /* Adjust spacing as needed */
+    vertical-align: middle; /* Align the icon with text */
+}
+
+.icon-save {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url('../data/icons/save.svg');
+    background-size: cover;
+    cursor: pointer;
+    margin-left: 10px; /* Adjust spacing as needed */
+    vertical-align: middle; /* Align the icon with text */
+}
+h2{
+    color: var(--text-color);
+}

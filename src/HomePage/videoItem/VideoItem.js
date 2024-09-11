@@ -4,24 +4,17 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-function VideoItem({ vid, imageName, title, artist, views, date, videoList, setVideoList}) {
+function VideoItem({ vid, imageName, title, artist, views, date }) {
+    //imageName is what the path of the photo in mongoDB
     const navigate = useNavigate();
-    const handleViewIncrement = (id) => {
-        setVideoList((prevList) =>
-            prevList.map((video) =>
-                video.id === id ? { ...video, views: video.views + 1 } : video
-            )
-        );
-    };
-    function onVideoClick(){
-        handleViewIncrement(vid);
-        navigate(`/video-watch/${vid}`);
+    function onVideoClick() {
+        navigate(`/videos/${vid}`);
     }
     return (
         <div className="col-lg-3 col-md-4 col-sm-6">
             <a className="card" onClick={onVideoClick}>
                 {/* Assuming imageName is a prop for the image source */}
-                <img src={imageName} className="card-img-top" alt="Video Thumbnail" />
+                <img src={`http://localhost:880/videoThumbnails/${imageName}`} className="card-img-top" alt="Video Thumbnail" />
                 <div className="card-body">
                     <h5 className="card-title">{title}</h5>
                     <p className="card-text">{artist}</p>
