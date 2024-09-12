@@ -4,8 +4,10 @@ import './VideoWatchPage.css'; // Import the CSS file
 import ToolBar from '../ToolBar/ToolBar';
 import MiniVideoItem from './miniVideoItem/MiniVideoItem';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchResult }) {
+    const navigate = useNavigate();
     const { doSearch } = MyComponent();
     const [artistProfile, setArtistProfile] = useState(null);
     const [artistName, setArtistName] = useState(null);
@@ -19,7 +21,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
     const [editedDescription, setEditedDescription] = useState('');
     const [comments, setComments] = useState({});
 
-    const [videoData, setVideoData] = useState(null); // State to hold video data
+    const [videoData, setVideoData] = useState(null);
     const isConnected = !!userData;
     useEffect(() => {
         const fetchVideoData = async () => {
@@ -32,7 +34,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                 }
                 const data = await response.json();
                 setVideoData(data);
-                setArtistName(data.artist); // Update artistName state
+                setArtistName(data.artist); 
             } catch (error) {
                 console.error('Error fetching video:', error);
             }
@@ -126,6 +128,9 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                                     src={`data:image/png;base64,${artistProfile}`}
                                     alt="Artist Profile"
                                     className="artist-image"
+                                    onClick={() => {
+                                        navigate(`/user/${artist}`);}
+                                    }
                                 />
                                 <h1 className="h1-font">
                                     {artist} - {isEditing ? (

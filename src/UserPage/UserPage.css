@@ -1,0 +1,34 @@
+.user-details-container {
+    padding: 10px;
+    margin-left: 300px; /* Adjust as needed to move right */
+    margin-top: 75px;  /* Adjust as needed to move down */
+}
+
+.user-details {
+    display: flex;
+    align-items: center;
+}
+
+.profile-image {
+    width: 120px; /* Adjust size as needed */
+    height: 120px; /* Adjust size as needed */
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    font-size: 2rem; /* Large font size for username */
+    margin: 0;
+}
+
+.nickname {
+    font-size: 1.5rem; /* Adjust size as needed */
+    color: #555;
+    margin-top: 5px;
+}
