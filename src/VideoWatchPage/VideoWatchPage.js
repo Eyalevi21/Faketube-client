@@ -37,37 +37,37 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                 console.error('Error fetching video:', error);
             }
         };
-    
+
         fetchVideoData();
     }, [id]);
-    
+
     useEffect(() => {
         if (!artistName) return;
-    
+
         const fetchArtistProfile = async () => {
             try {
                 const response = await fetch(`http://localhost:880/api/users/${artistName}`, {
                     method: 'GET'
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch artist profile');
                 }
-    
+
                 const userData = await response.json(); // Get the full user data
-                
+
                 // Extract the profile field from the user data
                 if (userData && userData.profile) {
                     setArtistProfile(userData.profile); // Set the profile data in your state
                 } else {
                     console.error('Profile field is missing in the user data');
                 }
-    
+
             } catch (error) {
                 console.error('Error fetching artist profile:', error);
             }
         };
-    
+
         fetchArtistProfile();
     }, [artistName]);
 
@@ -75,33 +75,33 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
         return <div>Loading...</div>;
     }
 
-    
+
     const handleEdit = () => {
-       
+
     };
 
     const handleSave = () => {
-        
+
     };
 
     const handleCommentSubmit = () => {
-        
+
     };
 
     const handleLike = () => {
-        
+
     };
 
     const handleDislike = () => {
-       
+
     };
 
-    
+
     const { title, artist, date, views, imageName, videoFile, description } = videoData;
 
     const videoSrc = videoFile && videoFile.startsWith('blob:')
-      ? videoFile
-      : `/videofiles/${videoFile}`;
+        ? videoFile
+        : `/videofiles/${videoFile}`;
 
     return (
         <div>
@@ -119,35 +119,48 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                         <video key={id} width="250" controls>
                             <source src={`http://localhost:880/videofiles/${videoFile}`} type="video/mp4" />
                         </video>
-                        <img src={`data:image/png;base64,${artistProfile}`} alt="Artist Profile" />
-                        <h1 className="h1-font">{artist} - {isEditing ? (
-                            <input
-                                type="text"
-                                value={editedTitle}
-                                onChange={(e) => setEditedTitle(e.target.value)}
-                            />
-                        ) : (
-                            title
-                        )}
-                        {isConnected && !isEditing && (
-                            <i className="icon-edit" onClick={handleEdit} />
-                        )}
-                        {isEditing && (
-                            <i className="icon-save" onClick={handleSave} />
-                        )}
-                        <p className="views-font">{views} views on {date}</p>
-                        
-                        <h2 className="description-font">{isEditing ? (
-                            <input
-                                type="text"
-                                value={editedDescription}
-                                onChange={(e) => setEditedDescription(e.target.value)}
-                            />
-                        ) : (
-                            description
-                        )}
-                        </h2>
-                        </h1>
+
+                        <div className="artist-container">
+                            <div className="artist-info">
+                                <img
+                                    src={`data:image/png;base64,${artistProfile}`}
+                                    alt="Artist Profile"
+                                    className="artist-image"
+                                />
+                                <h1 className="h1-font">
+                                    {artist} - {isEditing ? (
+                                        <input
+                                            type="text"
+                                            value={editedTitle}
+                                            onChange={(e) => setEditedTitle(e.target.value)}
+                                        />
+                                    ) : (
+                                        title
+                                    )}
+                                    {isConnected && !isEditing && (
+                                        <i className="icon-edit" onClick={handleEdit} />
+                                    )}
+                                    {isEditing && (
+                                        <i className="icon-save" onClick={handleSave} />
+                                    )}
+                                </h1>
+                            </div>
+
+                            <div className="artist-details">
+                                <p className="views-font">{views} views on {date}</p>
+                                <h2 className="description-font">
+                                    {isEditing ? (
+                                        <input
+                                            type="text"
+                                            value={editedDescription}
+                                            onChange={(e) => setEditedDescription(e.target.value)}
+                                        />
+                                    ) : (
+                                        description
+                                    )}
+                                </h2>
+                            </div>
+                        </div>
 
                         <div className="video-actions">
                             <button onClick={handleLike} disabled={userReactions[id] === 'like'}>
@@ -175,7 +188,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                         <button onClick={handleCommentSubmit}>Submit</button>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     );
