@@ -1,5 +1,5 @@
 import MyComponent from '../videoUtils';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './VideoWatchPage.css'; // Import the CSS file
 import ToolBar from '../ToolBar/ToolBar';
 import MiniVideoItem from './miniVideoItem/MiniVideoItem';
@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchResult }) {
+    const videoRef = useRef(null);
     const navigate = useNavigate();
     const { doSearch } = MyComponent();
     const [artistProfile, setArtistProfile] = useState(null);
@@ -24,27 +25,27 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
 
     const [videoData, setVideoData] = useState(null);
     const isConnected = !!userData;
-    
+
     useEffect(() => {
         const fetchVideos = async () => {
-          try {
-            const response = await fetch('http://localhost:880/api/videos', {
-              method: 'GET'
-            });
-            if (response.ok) {
-              const data = await response.json();
-              setVideoList(data);
-            } else {
-              throw new Error('Failed to fetch videos');
+            try {
+                const response = await fetch('http://localhost:880/api/videos', {
+                    method: 'GET'
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setVideoList(data);
+                } else {
+                    throw new Error('Failed to fetch videos');
+                }
+            } catch (err) {
+                console.error('Error fetching videos:', err);
             }
-          } catch (err) {
-            console.error('Error fetching videos:', err);
-          }
         };
-    
+
         fetchVideos();
-      }, []);
-    
+    }, []);
+
     useEffect(() => {
         const fetchVideoData = async () => {
             try {
@@ -56,7 +57,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                 }
                 const data = await response.json();
                 setVideoData(data);
-                setArtistName(data.artist); 
+                setArtistName(data.artist);
             } catch (error) {
                 console.error('Error fetching video:', error);
             }
@@ -94,6 +95,12 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
 
         fetchArtistProfile();
     }, [artistName]);
+
+    useEffect(() => {
+        if (videoRef.current && videoData) {
+            videoRef.current.load();
+        }
+    }, [videoData]);
 
     if (!videoData) {
         return <div>Loading...</div>;
@@ -140,7 +147,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
             <div className="main-content">
                 <div className="video-watch-page">
                     <div className="video-container">
-                        <video key={vid} width="250" controls>
+                        <video ref={videoRef} width="250" controls>
                             <source src={`http://localhost:880/videofiles/${videoFile}`} type="video/mp4" />
                         </video>
 
@@ -151,7 +158,8 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                                     alt="Artist Profile"
                                     className="artist-image"
                                     onClick={() => {
-                                        navigate(`/user/${artist}`);}
+                                        navigate(`/user/${artist}`);
+                                    }
                                     }
                                 />
                                 <h1 className="h1-font">
