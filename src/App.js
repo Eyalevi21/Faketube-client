@@ -30,7 +30,7 @@ function App() {
       <Route path="/login" element={<Login userData = {userData} setUserData={setUserData} theme={theme} toggleTheme={toggleTheme}/> } />
       <Route path="/register" element={<Reg theme={theme} toggleTheme={toggleTheme}/> } />
       <Route path="/welcome" element={<Welcome/> } />  
-      <Route path="/videos/:id" element={<VideoWatchPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} />} />
+      <Route path="/videos/:vid" element={<VideoWatchPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} />} />
       <Route path="/user/:username" element={<UserPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} />} />
     </Routes>
   </BrowserRouter>

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
+
 function VideoItem({ vid, imageName, title, artist, views, date }) {
     //imageName is what the path of the photo in mongoDB
     const navigate = useNavigate();

@@ -11,7 +11,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
     const { doSearch } = MyComponent();
     const [artistProfile, setArtistProfile] = useState(null);
     const [artistName, setArtistName] = useState(null);
-    const { id } = useParams();
+    const { vid } = useParams();
     const [likes, setLikes] = useState({});
     const [dislikes, setDislikes] = useState({});
     const [newComment, setNewComment] = useState('');
@@ -20,13 +20,35 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
     const [editedTitle, setEditedTitle] = useState('');
     const [editedDescription, setEditedDescription] = useState('');
     const [comments, setComments] = useState({});
+    const [videoList, setVideoList] = useState(null);
 
     const [videoData, setVideoData] = useState(null);
     const isConnected = !!userData;
+    
+    useEffect(() => {
+        const fetchVideos = async () => {
+          try {
+            const response = await fetch('http://localhost:880/api/videos', {
+              method: 'GET'
+            });
+            if (response.ok) {
+              const data = await response.json();
+              setVideoList(data);
+            } else {
+              throw new Error('Failed to fetch videos');
+            }
+          } catch (err) {
+            console.error('Error fetching videos:', err);
+          }
+        };
+    
+        fetchVideos();
+      }, []);
+    
     useEffect(() => {
         const fetchVideoData = async () => {
             try {
-                const response = await fetch(`http://localhost:880/api/videos/${id}`, {
+                const response = await fetch(`http://localhost:880/api/videos/${vid}`, {
                     method: 'GET'
                 });
                 if (!response.ok) {
@@ -41,7 +63,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
         };
 
         fetchVideoData();
-    }, [id]);
+    }, [vid]);
 
     useEffect(() => {
         if (!artistName) return;
@@ -118,7 +140,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
             <div className="main-content">
                 <div className="video-watch-page">
                     <div className="video-container">
-                        <video key={id} width="250" controls>
+                        <video key={vid} width="250" controls>
                             <source src={`http://localhost:880/videofiles/${videoFile}`} type="video/mp4" />
                         </video>
 
@@ -168,11 +190,11 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                         </div>
 
                         <div className="video-actions">
-                            <button onClick={handleLike} disabled={userReactions[id] === 'like'}>
-                                Like ({likes[id] || 0})
+                            <button onClick={handleLike} disabled={userReactions[vid] === 'like'}>
+                                Like ({likes[vid] || 0})
                             </button>
-                            <button onClick={handleDislike} disabled={userReactions[id] === 'dislike'}>
-                                Dislike ({dislikes[id] || 0})
+                            <button onClick={handleDislike} disabled={userReactions[vid] === 'dislike'}>
+                                Dislike ({dislikes[vid] || 0})
                             </button>
                             <button>Share</button>
                         </div>
@@ -180,7 +202,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
 
                     <div className="comments-section">
                         <h2>Comments</h2>
-                        {comments[id] && comments[id].map((comment, index) => (
+                        {comments[vid] && comments[vid].map((comment, index) => (
                             <div key={index} className="comment">
                                 <strong>{comment.username}</strong>: {comment.comment}
                             </div>
@@ -192,6 +214,21 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                         />
                         <button onClick={handleCommentSubmit}>Submit</button>
                     </div>
+                </div>
+
+                <div className="related-videos">
+                    {videoList.map((video) => {
+                        return (
+                            <MiniVideoItem
+                                vid={video.vid}
+                                imageName={video.imageName}
+                                title={video.title}
+                                artist={video.artist}
+                                views={video.views}
+                                date={video.date}
+                            />
+                        );
+                    })}
                 </div>
 
             </div>
