@@ -14,18 +14,19 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
     const [artistProfile, setArtistProfile] = useState(null);
     const [videoList, setVideoList] = useState(null);
     const [videoData, setVideoData] = useState(null);
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState('');
 
 
 
     const { doSearch } = MyComponent();
     const [likes, setLikes] = useState({});
     const [dislikes, setDislikes] = useState({});
-    const [newComment, setNewComment] = useState('');
     const [userReactions, setUserReactions] = useState({});
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState('');
     const [editedDescription, setEditedDescription] = useState('');
-    const [comments, setComments] = useState({});
+
 
 
 
@@ -110,6 +111,27 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
         fetchArtistProfile();
     }, [artistName]);
 
+    useEffect(() => {
+        const fetchComments = async () => {
+            try {
+                setComments([]);
+                setNewComment('');
+                const response = await fetch(`http://localhost:880/api/videos/${vid}/comments`, {
+                    method: 'GET'
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch comments');
+                }
+                const data = await response.json();
+                setComments(data);
+            } catch (error) {
+                console.error('Error fetching comments:', error);
+            }
+        };
+
+        fetchComments();
+    }, [vid]);
+
     //important for rendering video when refresh
     useEffect(() => {
         if (videoRef.current && videoData) {
@@ -117,7 +139,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
         }
     }, [videoData]);
 
-    
+
 
     const handleEdit = () => {
 
@@ -127,8 +149,37 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
 
     };
 
-    const handleCommentSubmit = () => {
-
+    const handleCommentSubmit = async () => {
+        try {
+            const response = await fetch(`http://localhost:880/api/videos/${vid}/comments`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    creator: userData.username,
+                    content: newComment,
+                    commentVid: vid
+                }),
+            });
+    
+            if (response.ok) {
+                const newCommentData = await response.json();
+                setComments((prevComments) => {
+                    if (Array.isArray(prevComments)) {
+                        return [...prevComments, newCommentData];
+                    } else {
+                        return [newCommentData];
+                    }
+                });
+    
+                setNewComment('');
+            } else {
+                throw new Error('Failed to post comment');
+            }
+        } catch (error) {
+            console.error('Error posting comment:', error);
+        }
     };
 
     const handleLike = () => {
@@ -223,11 +274,15 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
 
                     <div className="comments-section">
                         <h2>Comments</h2>
-                        {comments[vid] && comments[vid].map((comment, index) => (
-                            <div key={index} className="comment">
-                                <strong>{comment.username}</strong>: {comment.comment}
-                            </div>
-                        ))}
+                        {comments.length > 0 ? (
+                            comments.map((comment) => (
+                                <div key={comment._id} className="comment">
+                                    <p><strong>{comment.creator}</strong>: {comment.content}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No comments yet. Be the first to comment!</p>
+                        )}
                         <textarea
                             value={newComment}
                             onChange={(e) => setNewComment(e.target.value)}
