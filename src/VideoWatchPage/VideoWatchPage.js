@@ -7,12 +7,17 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchResult }) {
-    const videoRef = useRef(null);
     const navigate = useNavigate();
-    const { doSearch } = MyComponent();
-    const [artistProfile, setArtistProfile] = useState(null);
-    const [artistName, setArtistName] = useState(null);
     const { vid } = useParams();
+    const videoRef = useRef(null);
+    const [artistName, setArtistName] = useState(null);
+    const [artistProfile, setArtistProfile] = useState(null);
+    const [videoList, setVideoList] = useState(null);
+    const [videoData, setVideoData] = useState(null);
+
+
+
+    const { doSearch } = MyComponent();
     const [likes, setLikes] = useState({});
     const [dislikes, setDislikes] = useState({});
     const [newComment, setNewComment] = useState('');
@@ -21,11 +26,10 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
     const [editedTitle, setEditedTitle] = useState('');
     const [editedDescription, setEditedDescription] = useState('');
     const [comments, setComments] = useState({});
-    const [videoList, setVideoList] = useState(null);
 
-    const [videoData, setVideoData] = useState(null);
+
+
     const isConnected = !!userData;
-
     useEffect(() => {
         const fetchVideos = async () => {
             try {
@@ -46,10 +50,21 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
         fetchVideos();
     }, []);
 
+
+    useEffect(() => {
+        if (videoList && vid) {
+            const matchingVideo = videoList.find(video => video.vid === vid);
+            if (matchingVideo) {
+                setArtistName(matchingVideo.artist);
+            }
+        }
+    }, [videoList, vid]);
+
+
     useEffect(() => {
         const fetchVideoData = async () => {
             try {
-                const response = await fetch(`http://localhost:880/api/videos/${vid}`, {
+                const response = await fetch(`http://localhost:880/api/users/${artistName}/videos/${vid}`, {
                     method: 'GET'
                 });
                 if (!response.ok) {
@@ -57,7 +72,6 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                 }
                 const data = await response.json();
                 setVideoData(data);
-                setArtistName(data.artist);
             } catch (error) {
                 console.error('Error fetching video:', error);
             }
@@ -96,16 +110,14 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
         fetchArtistProfile();
     }, [artistName]);
 
+    //important for rendering video when refresh
     useEffect(() => {
         if (videoRef.current && videoData) {
             videoRef.current.load();
         }
     }, [videoData]);
 
-    if (!videoData) {
-        return <div>Loading...</div>;
-    }
-
+    
 
     const handleEdit = () => {
 
@@ -127,13 +139,14 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
 
     };
 
+    //works without it (to check)
+    //const videoSrc = videoFile && videoFile.startsWith('blob:') ? videoFile : `/videofiles/${videoFile}`;
 
+
+    if (!videoData) {
+        return <div>Loading...</div>;
+    }
     const { title, artist, date, views, imageName, videoFile, description } = videoData;
-
-    const videoSrc = videoFile && videoFile.startsWith('blob:')
-        ? videoFile
-        : `/videofiles/${videoFile}`;
-
     return (
         <div>
             <ToolBar
