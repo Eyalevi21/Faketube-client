@@ -27,7 +27,19 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
     const [editedTitle, setEditedTitle] = useState('');
     const [editedDescription, setEditedDescription] = useState('');
 
-
+    useEffect(() => {
+        const token = localStorage.getItem('jwt');
+        const storedUserData = localStorage.getItem('user');
+        console.log("data: ", storedUserData)
+        console.log("token: ", token)
+        if (token && storedUserData) {
+          // JWT and userData exist, set userData from localStorage
+          setUserData(JSON.parse(storedUserData));
+        } else {
+          // JWT does not exist, clear userData
+          setUserData(null);
+        }
+      }, [setUserData]);
 
 
     const isConnected = !!userData;
@@ -94,11 +106,11 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                     throw new Error('Failed to fetch artist profile');
                 }
 
-                const userData = await response.json(); // Get the full user data
+                const {token, user} = await response.json(); // Get the full user data
 
                 // Extract the profile field from the user data
-                if (userData && userData.profile) {
-                    setArtistProfile(userData.profile); // Set the profile data in your state
+                if (user && user.profile) {
+                    setArtistProfile(user.profile); // Set the profile data in your state
                 } else {
                     console.error('Profile field is missing in the user data');
                 }

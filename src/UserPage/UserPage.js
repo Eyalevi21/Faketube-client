@@ -27,7 +27,6 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
           setUserData(null);
         }
       }, [setUserData]);
-          
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
@@ -38,14 +37,16 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
                 if (!response.ok) {
                     throw new Error('Failed to fetch user data');
                 }
-                const userDetailsRead = await response.json();
-                setUserDetails(userDetailsRead);
+                const {token, user} = await response.json();
+                setUserDetails(user);
             } catch (error) {
                 console.error('Error fetching user details:', error);
             }
         };
         fetchUserDetails();
+        console.log("artist:",userDetails);
     }, [username]);
+    
 
     useEffect(() => {
         const fetchUserVideos = async () => {
