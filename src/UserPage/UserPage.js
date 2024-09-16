@@ -13,22 +13,22 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
     const { username } = useParams();
     const { doSearch } = MyComponent();
     const [videoData, setVideoData] = useState(null);
-    const [userDetails, setUserDetails] = useState(null);    
-    const [token, setToken] = useState(() => localStorage.getItem('jwt') || null);
+    const [userDetails, setUserDetails] = useState(null);
+    const [token, setToken] = useState(localStorage.getItem('jwt'));
+    const [tokenValid, setTokenValid] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedNickname, seteditedNickname] = useState('');
+
     useEffect(() => {
-        const storedToken = localStorage.getItem('jwt');
         const storedUserData = localStorage.getItem('user');
-      
-        if (storedToken && storedUserData) {
-          // JWT and userData exist, set userData and token from localStorage
-          setUserData(JSON.parse(storedUserData));
-          setToken(storedToken); // No need to parse the token if it's a string
+        if (token && storedUserData) {
+            // JWT and userData exist, set userData from localStorage
+            setUserData(JSON.parse(storedUserData));
         } else {
-          // JWT does not exist, clear userData and token
-          setUserData(null);
-          setToken(null);
+            // JWT does not exist, clear userData
+            setUserData(null);
         }
-      }, [setUserData]);  
+    }, [setUserData]);
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
@@ -39,16 +39,16 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
                 if (!response.ok) {
                     throw new Error('Failed to fetch user data');
                 }
-                const {token, user} = await response.json();
+                const { token, user } = await response.json();
                 setUserDetails(user);
             } catch (error) {
                 console.error('Error fetching user details:', error);
             }
         };
         fetchUserDetails();
-        console.log("artist:",userDetails);
+        console.log("artist:", userDetails);
     }, [username]);
-    
+
 
     useEffect(() => {
         const fetchUserVideos = async () => {
@@ -68,6 +68,83 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
         fetchUserVideos();
     }, [username]);
 
+    const verifyToken = async () => {
+        if (!token) {
+            console.log('No token to verify');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:880/api/tokens/verify-token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ token }),
+            });
+
+            const data = await response.json();
+            if (data.valid) {
+                setTokenValid(true);
+            } else {
+                setTokenValid(false);
+                console.error('Token is invalid or expired:', data.message);
+            }
+        } catch (error) {
+            console.error('Error verifying token:', error);
+        }
+    };
+
+    const handleEdit = async () => {
+        if (tokenValid && (userDetails.username)) {
+            setIsEditing(true);
+            seteditedNickname(userDetails.nickname);
+        }
+    };
+
+
+    const handleSave = async () => {
+        /*
+        try {
+            const response = await fetch(`http://localhost:880/api/users/${artistName}/videos/${vid}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    title: editedTitle,
+                    description: editedDescription,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                console.log('Video updated successfully:', result);
+                videoData.title = editedTitle;
+                videoData.description = editedDescription;
+                setIsEditing(false);
+            } else {
+                console.error('Failed to update video:', result.message);
+            }
+        } catch (error) {
+            console.error('Error updating video:', error);
+        }*/
+    };
+
+
+
+
+
+
+
+
+    useEffect(() => {
+        verifyToken();
+    }, [token]);
+
+    const isConnected = !!userData;
     return (
         <div className="home-page-con">
             <SideMenu />
@@ -83,7 +160,21 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
                             />
                             <div className="user-info">
                                 <h1 className="username">{userDetails.username}</h1>
-                                <p className="nickname">{userDetails.nickname}</p>
+                                <p className="nickname">{isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={editedNickname}
+                                        onChange={(e) => seteditedNickname(e.target.value)}
+                                    />
+                                ) : (
+                                    userDetails.nickname
+                                )}{isConnected && !isEditing && (userData.username === userDetails.username) && (
+                                    <i className="icon-edit" onClick={handleEdit} />
+                                )}
+                                    {isEditing && (
+                                        <i className="icon-save" onClick={handleSave} />
+                                    )}
+                                </p>
                             </div>
                         </div>
                     )}
