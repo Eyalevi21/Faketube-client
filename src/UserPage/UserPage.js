@@ -14,7 +14,20 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
     const { doSearch } = MyComponent();
     const [videoData, setVideoData] = useState(null);
     const [userDetails, setUserDetails] = useState(null);
-
+    useEffect(() => {
+        const token = localStorage.getItem('jwt');
+        const storedUserData = localStorage.getItem('user');
+        console.log("data: ", storedUserData)
+        console.log("token: ", token)
+        if (token && storedUserData) {
+          // JWT and userData exist, set userData from localStorage
+          setUserData(JSON.parse(storedUserData));
+        } else {
+          // JWT does not exist, clear userData
+          setUserData(null);
+        }
+      }, [setUserData]);
+          
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {

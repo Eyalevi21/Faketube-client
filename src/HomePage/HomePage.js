@@ -8,6 +8,20 @@ import './HomePage.css';
 function HomePage({ theme, toggleTheme, userData, setUserData}) {
   const [videos, setVideos] = useState([]);
   
+  useEffect(() => {
+    const token = localStorage.getItem('jwt');
+    const storedUserData = localStorage.getItem('user');
+    console.log("data: ", storedUserData)
+    console.log("token: ", token)
+    if (token && storedUserData) {
+      // JWT and userData exist, set userData from localStorage
+      setUserData(JSON.parse(storedUserData));
+    } else {
+      // JWT does not exist, clear userData
+      setUserData(null);
+    }
+  }, [setUserData]);
+
   // Fetch videos from the server when the component mounts
   useEffect(() => {
     const fetchVideos = async () => {

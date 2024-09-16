@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const PersonalBox = ({ userData, setUserData }) => {
   const [showButtons, setShowButtons] = useState(false);
   const navigate = useNavigate();
+
   const handleUploadClick = () => {
       navigate('/Upload' ); 
   };
@@ -17,6 +18,8 @@ const PersonalBox = ({ userData, setUserData }) => {
   };
   const handleSignOutClick = () => {
     {setUserData(null)}
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('user');
   };
 
   return (

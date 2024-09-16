@@ -219,7 +219,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                             <div className="artist-info">
                                 <img
                                     src={`data:image/png;base64,${artistProfile}`}
-                                    alt="Artist Profile"
+                                    alt="Artist"
                                     className="artist-image"
                                     onClick={() => {
                                         navigate(`/user/${artist}`);
