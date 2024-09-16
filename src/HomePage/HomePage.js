@@ -11,8 +11,6 @@ function HomePage({ theme, toggleTheme, userData, setUserData}) {
   useEffect(() => {
     const token = localStorage.getItem('jwt');
     const storedUserData = localStorage.getItem('user');
-    console.log("data: ", storedUserData)
-    console.log("token: ", token)
     if (token && storedUserData) {
       // JWT and userData exist, set userData from localStorage
       setUserData(JSON.parse(storedUserData));

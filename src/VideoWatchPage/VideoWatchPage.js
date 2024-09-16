@@ -19,27 +19,24 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
     const [likes, setLikes] = useState(0); // or an empty object {}
     const [unlikes, setUnlikes] = useState(0); // or an empty object {}
     const [userReactions, setUserReactions] = useState({}); // Default as an empty object
-
-
-
-    const { doSearch } = MyComponent();
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState('');
     const [editedDescription, setEditedDescription] = useState('');
+    const { doSearch } = MyComponent();
+    const [token, setToken] = useState(localStorage.getItem('jwt'));
+    const [tokenValid, setTokenValid] = useState(false);
+
 
     useEffect(() => {
-        const token = localStorage.getItem('jwt');
         const storedUserData = localStorage.getItem('user');
-        console.log("data: ", storedUserData)
-        console.log("token: ", token)
         if (token && storedUserData) {
-          // JWT and userData exist, set userData from localStorage
-          setUserData(JSON.parse(storedUserData));
+            // JWT and userData exist, set userData from localStorage
+            setUserData(JSON.parse(storedUserData));
         } else {
-          // JWT does not exist, clear userData
-          setUserData(null);
+            // JWT does not exist, clear userData
+            setUserData(null);
         }
-      }, [setUserData]);
+    }, [setUserData]);
 
 
     const isConnected = !!userData;
@@ -106,7 +103,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                     throw new Error('Failed to fetch artist profile');
                 }
 
-                const {token, user} = await response.json(); // Get the full user data
+                const { token, user } = await response.json(); // Get the full user data
 
                 // Extract the profile field from the user data
                 if (user && user.profile) {
@@ -174,13 +171,79 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
 
 
 
-    const handleEdit = () => {
+    const handleEdit = async () => {
+        if (tokenValid && (artistName === userData.username)) {
+            setIsEditing(true);
+            setEditedTitle(videoData.title);
+            setEditedDescription(videoData.description);
+        }
 
     };
 
-    const handleSave = () => {
 
+    const handleSave = async () => {
+        try {
+            const response = await fetch(`http://localhost:880/api/users/${artistName}/videos/${vid}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    title: editedTitle,
+                    description: editedDescription,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                console.log('Video updated successfully:', result);
+                videoData.title = editedTitle;
+                videoData.description = editedDescription;
+                setIsEditing(false);
+            } else {
+                console.error('Failed to update video:', result.message);
+            }
+        } catch (error) {
+            console.error('Error updating video:', error);
+        }
     };
+
+
+    const verifyToken = async () => {
+        if (!token) {
+            console.log('No token to verify');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:880/api/tokens/verify-token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ token }),
+            });
+
+            const data = await response.json();
+            if (data.valid) {
+                setTokenValid(true);
+            } else {
+                setTokenValid(false);
+                console.error('Token is invalid or expired:', data.message);
+            }
+        } catch (error) {
+            console.error('Error verifying token:', error);
+        }
+    };
+
+    useEffect(() => {
+        verifyToken(); // Automatically verify token on component mount
+    }, [token]);
+
+
+
 
     const handleCommentSubmit = async () => {
         try {
@@ -218,7 +281,6 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
     const handleReaction = async (reactionType) => {
         try {
             const currentReaction = userReactions[vid] || '';
-            console.log("currrrrrent", currentReaction);
             const response = await fetch(`http://localhost:880/api/videos/${vid}/reactions`, {
                 method: 'PATCH',
                 headers: {
@@ -295,7 +357,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                                     ) : (
                                         title
                                     )}
-                                    {isConnected && !isEditing && (
+                                    {isConnected && !isEditing && (userData.username === artistName) && (
                                         <i className="icon-edit" onClick={handleEdit} />
                                     )}
                                     {isEditing && (
