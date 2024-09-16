@@ -16,13 +16,13 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
     const [videoData, setVideoData] = useState(null);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
+    const [likes, setLikes] = useState(0); // or an empty object {}
+    const [unlikes, setUnlikes] = useState(0); // or an empty object {}
+    const [userReactions, setUserReactions] = useState({}); // Default as an empty object
 
 
 
     const { doSearch } = MyComponent();
-    const [likes, setLikes] = useState({});
-    const [dislikes, setDislikes] = useState({});
-    const [userReactions, setUserReactions] = useState({});
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState('');
     const [editedDescription, setEditedDescription] = useState('');
@@ -111,6 +111,27 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
         fetchArtistProfile();
     }, [artistName]);
 
+
+    useEffect(() => {
+        const fetchReactions = async () => {
+            try {
+                const response = await fetch(`http://localhost:880/api/videos/${vid}/reactions`, {
+                    method: 'GET',
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch reactions');
+                }
+                const data = await response.json();
+                setLikes(data.likes);
+                setUnlikes(data.unlikes);
+            } catch (error) {
+                console.error('Error fetching reactions:', error);
+            }
+        };
+
+        fetchReactions();
+    }, [vid]);
+
     useEffect(() => {
         const fetchComments = async () => {
             try {
@@ -162,7 +183,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                     commentVid: vid
                 }),
             });
-    
+
             if (response.ok) {
                 const newCommentData = await response.json();
                 setComments((prevComments) => {
@@ -172,7 +193,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                         return [newCommentData];
                     }
                 });
-    
+
                 setNewComment('');
             } else {
                 throw new Error('Failed to post comment');
@@ -182,13 +203,39 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
         }
     };
 
-    const handleLike = () => {
+    const handleReaction = async (reactionType) => {
+        try {
+            const currentReaction = userReactions[vid] || '';
+            console.log("currrrrrent", currentReaction);
+            const response = await fetch(`http://localhost:880/api/videos/${vid}/reactions`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    currentReaction: currentReaction || null, // Current user's reaction ('like', 'unlike', or null)
+                    newReaction: reactionType,               // New reaction ('like' or 'unlike')
+                }),
+            });
 
+            if (response.ok) {
+                const data = await response.json();
+                // Update the likes, unlikes, and userReactions state based on server response
+                setLikes(data.likes);
+                setUnlikes(data.unlikes);
+                setUserReactions((prevReactions) => ({
+                    ...prevReactions,
+                    [vid]: reactionType, // Update user reaction for the current video
+                }));
+            } else {
+                throw new Error('Failed to update reaction');
+            }
+        } catch (error) {
+            console.error('Error updating reaction:', error);
+        }
     };
 
-    const handleDislike = () => {
 
-    };
 
     //works without it (to check)
     //const videoSrc = videoFile && videoFile.startsWith('blob:') ? videoFile : `/videofiles/${videoFile}`;
@@ -262,11 +309,17 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                         </div>
 
                         <div className="video-actions">
-                            <button onClick={handleLike} disabled={userReactions[vid] === 'like'}>
-                                Like ({likes[vid] || 0})
+                            <button
+                                onClick={() => handleReaction('like')}
+                                disabled={userReactions[vid] === 'like'}
+                            >
+                                Like ({likes || 0})
                             </button>
-                            <button onClick={handleDislike} disabled={userReactions[vid] === 'dislike'}>
-                                Dislike ({dislikes[vid] || 0})
+                            <button
+                                onClick={() => handleReaction('unlike')}
+                                disabled={userReactions[vid] === 'unlike'}
+                            >
+                                Unlike ({unlikes || 0})
                             </button>
                             <button>Share</button>
                         </div>
