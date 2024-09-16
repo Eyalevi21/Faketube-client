@@ -5,6 +5,30 @@
     width: 99%;
 }
 
+.artist-container {
+    display: flex;
+    flex-direction: column; /* Stack the artist-info and artist-details vertically */
+}
+.artist-info {
+    display: flex;
+    align-items: center; /* Align the image and artist name horizontally */
+    margin-bottom: 10px; /* Adds space between the artist-info and artist-details */
+}
+
+.artist-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Circular image */
+    object-fit: cover;
+    margin-right: 10px; /* Space between image and artist name */
+    cursor: pointer;
+}
+
+.artist-details {
+    display: flex;
+    flex-direction: column; /* Stacks views and description vertically */
+}
+
 .video-watch-page {
     flex: 1;
     display: flex;

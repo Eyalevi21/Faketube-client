@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
-function Login({userData, setUserData}) {
+function Login({userData, setUserData }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -40,38 +40,31 @@ function Login({userData, setUserData}) {
             username: username,
             password: password
         };
-        
+    
         try {
-            const res = await fetch('http://localhost:880/api/users', {
+            const res = await fetch('http://localhost:880/api/tokens', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data)
             });
-            console.log('Response:', res);
-            if (res.ok) {
-                const result = await res.json();
-                console.log('Response:', result);
-                // Set the user data (username, password, and profile)
-               const user = { username: result.username,
-                    nickname: result.nickname, // Optionally store this, depending on your app logic
-                    profile: result.profilePicture}            
-                    {setUserData(user)};
-           
     
-                // Navigate to the home page
+            const result = await res.json();
+    
+            if (res.ok) {
+                localStorage.setItem('jwt', result.token);
+                setUserData(result.user);
                 navigate('/');
             } else {
-                const errorResult = await res.json();
-                setError(errorResult.message || 'Login failed');
+                setError(result.message || 'Login failed');
             }
-        } catch (error) {
-            console.log("the error: ", error)
-            setError('Something went wrong. Please try again.');
+        } catch (err) {
+            setError('An error occurred during login');
+            console.error('Error logging in:', err);
         }
     };
-    
+
 
     return (
         <div className="full-height-log">
@@ -110,7 +103,7 @@ function Login({userData, setUserData}) {
                             <p>Doesn't have an account?</p>
                         </div>
                     </div>
-                </form>        
+                </form>
             </div>
         </div>
     );

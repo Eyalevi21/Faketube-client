@@ -5,6 +5,7 @@ import Login from './Login/Login.js';
 import VideoWatchPage from './VideoWatchPage/VideoWatchPage.js'; 
 import Reg from './Register/Reg.js';
 import HomePage from './HomePage/HomePage.js';
+import UserPage from './UserPage/UserPage.js';
 import Welcome from './Welcome.js';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -29,7 +30,8 @@ function App() {
       <Route path="/login" element={<Login userData = {userData} setUserData={setUserData} theme={theme} toggleTheme={toggleTheme}/> } />
       <Route path="/register" element={<Reg theme={theme} toggleTheme={toggleTheme}/> } />
       <Route path="/welcome" element={<Welcome/> } />  
-      <Route path="/videos/:id" element={<VideoWatchPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} />} />
+      <Route path="/videos/:vid" element={<VideoWatchPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} />} />
+      <Route path="/user/:username" element={<UserPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} />} />
     </Routes>
   </BrowserRouter>
   );

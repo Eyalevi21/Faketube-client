@@ -49,7 +49,7 @@ function Reg() {
         nickname: formState.nickname,
         profile: processedimage
     };
-    const res = await fetch('http://localhost:880/register', {
+    const res = await fetch('http://localhost:880/api/users', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

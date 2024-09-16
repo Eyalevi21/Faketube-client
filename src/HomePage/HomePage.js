@@ -17,8 +17,7 @@ function HomePage({ theme, toggleTheme, userData, setUserData}) {
         });
         if (response.ok) {
           const data = await response.json();
-          setVideos(data); // Store videos in state
-          console.log("data: ", data)
+          setVideos(data);
         } else {
           throw new Error('Failed to fetch videos');
         }
