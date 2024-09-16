@@ -54,6 +54,7 @@ function Login({userData, setUserData }) {
     
             if (res.ok) {
                 localStorage.setItem('jwt', result.token);
+                localStorage.setItem('user', JSON.stringify(result.user));                
                 setUserData(result.user);
                 navigate('/');
             } else {
