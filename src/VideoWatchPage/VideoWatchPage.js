@@ -18,7 +18,6 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
     const [newComment, setNewComment] = useState('');
     const [likes, setLikes] = useState(0); // or an empty object {}
     const [unlikes, setUnlikes] = useState(0); // or an empty object {}
-    const [userReactions, setUserReactions] = useState({}); // Default as an empty object
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState('');
     const [editedDescription, setEditedDescription] = useState('');
@@ -278,34 +277,29 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
         }
     };
 
-    const handleReaction = async (reactionType) => {
+    const handleReaction = async (reactionType, usernameReacted) => {
         try {
-            const currentReaction = userReactions[vid] || '';
             const response = await fetch(`http://localhost:880/api/videos/${vid}/reactions`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    currentReaction: currentReaction || null, // Current user's reaction ('like', 'unlike', or null)
-                    newReaction: reactionType,               // New reaction ('like' or 'unlike')
+                    username: usernameReacted,
+                    newReaction: reactionType,
                 }),
             });
-
+            
+            const data = await response.json();
+            
             if (response.ok) {
-                const data = await response.json();
-                // Update the likes, unlikes, and userReactions state based on server response
                 setLikes(data.likes);
                 setUnlikes(data.unlikes);
-                setUserReactions((prevReactions) => ({
-                    ...prevReactions,
-                    [vid]: reactionType, // Update user reaction for the current video
-                }));
             } else {
-                throw new Error('Failed to update reaction');
+                console.error('Failed to update reaction:', data.message);
             }
         } catch (error) {
-            console.error('Error updating reaction:', error);
+            console.error('Error handling reaction:', error);
         }
     };
 
@@ -384,14 +378,12 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
 
                         <div className="video-actions">
                             <button
-                                onClick={() => handleReaction('like')}
-                                disabled={userReactions[vid] === 'like'}
+                                onClick={() => handleReaction('like', userData.username)}
                             >
                                 Like ({likes || 0})
                             </button>
                             <button
-                                onClick={() => handleReaction('unlike')}
-                                disabled={userReactions[vid] === 'unlike'}
+                                onClick={() => handleReaction('unlike', userData.username)}
                             >
                                 Unlike ({unlikes || 0})
                             </button>

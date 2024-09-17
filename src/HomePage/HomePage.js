@@ -43,7 +43,7 @@ function HomePage({ theme, toggleTheme, userData, setUserData}) {
   
   return (
     <div className = "home-page-con">
-      <SideMenu />
+      <SideMenu userData={userData}/>
       <div className="HomePage">
         <ToolBar theme={theme} toggleTheme={toggleTheme} userData={userData} setUserData={setUserData} />
         <div className="user-info">

@@ -18,6 +18,7 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
     const [tokenValid, setTokenValid] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedNickname, seteditedNickname] = useState('');
+    const [editedProfile, setEditedProfile] = useState('');
 
     useEffect(() => {
         const storedUserData = localStorage.getItem('user');
@@ -46,7 +47,6 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
             }
         };
         fetchUserDetails();
-        console.log("artist:", userDetails);
     }, [username]);
 
 
@@ -104,40 +104,33 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
 
 
     const handleSave = async () => {
-        /*
         try {
-            const response = await fetch(`http://localhost:880/api/users/${artistName}/videos/${vid}`, {
+            const response = await fetch(`http://localhost:880/api/users/${userData.username}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    title: editedTitle,
-                    description: editedDescription,
+                    nickname: editedNickname,
+                    profile: editedProfile,   
                 }),
             });
-
+    
             const result = await response.json();
-
+    
             if (response.ok) {
-                console.log('Video updated successfully:', result);
-                videoData.title = editedTitle;
-                videoData.description = editedDescription;
+                console.log('User updated successfully:', result);
+                userDetails.nickname = editedNickname;
                 setIsEditing(false);
+                setUserData(userDetails);
             } else {
-                console.error('Failed to update video:', result.message);
+                console.error('Failed to update user:', result.message);
             }
         } catch (error) {
-            console.error('Error updating video:', error);
-        }*/
+            console.error('Error updating user:', error);
+        }
     };
-
-
-
-
-
-
 
 
     useEffect(() => {
@@ -147,7 +140,7 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
     const isConnected = !!userData;
     return (
         <div className="home-page-con">
-            <SideMenu />
+            <SideMenu userData={userData}/>
             <div className="HomePage">
                 <ToolBar theme={theme} toggleTheme={toggleTheme} userData={userData} setUserData={setUserData} />
                 <div className="user-details-container">
