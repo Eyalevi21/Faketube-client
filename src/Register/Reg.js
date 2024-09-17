@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import formConfig from '../data/regProp.json';
 import './Reg.css'
@@ -13,6 +13,15 @@ function Reg() {
   }, {});
   const [formState, setFormState] = useState(initialState);
   const [isFocused, setIsFocused] = useState({});
+  const [token, setToken] = useState(() => sessionStorage.getItem('jwt') || null);
+  useEffect(() => {
+    if (token) {
+      // Token and userData exist, show custom notification and navigate to home
+      alert('You are already signed in. Redirecting to home')  
+      // Delay for 3 seconds before navigating
+      navigate('/');
+    }         
+  }, [navigate]);
   // Generic handler for input focus
   const handleFocus = (id) => {
     if (!isFocused[id]) {
@@ -35,6 +44,12 @@ function Reg() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (token) {
+      // Token exists, alert and redirect to home page
+      alert('You are already signed in!');
+      navigate('/');
+      return; // Stop further form submission processing
+    }
     
     // Validate fields before submitting
     if (!validateFields()) {
@@ -53,6 +68,7 @@ function Reg() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {}), // Conditionally add Authorization header if JWT exists
         },
         body: JSON.stringify(data)
     });
@@ -86,7 +102,7 @@ function Reg() {
   return (
     <div className="container d-flex justify-content-center align-items-center full-height-Reg">
       <div className="center-rectangle-Reg">
-        <h2>Create a Faketube Account</h2>
+        <h2>Create a Faketube Account</h2>      
         <form className="row g-3" onSubmit={handleSubmit}>
           {/* Map over form fields and render corresponding input elements */}
           {formConfig.map(field => (

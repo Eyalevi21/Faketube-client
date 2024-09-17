@@ -28,23 +28,30 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
 
 
     useEffect(() => {
-        const storedUserData = localStorage.getItem('user');
-        if (token && storedUserData) {
-            // JWT and userData exist, set userData from localStorage
-            setUserData(JSON.parse(storedUserData));
+        const storedToken = sessionStorage.getItem('jwt');
+        const storedUserData = sessionStorage.getItem('user');
+        if (storedToken && storedUserData) {
+          // JWT and userData exist, set userData from localStorage
+          setUserData(JSON.parse(storedUserData));
+          setToken(storedToken);
         } else {
-            // JWT does not exist, clear userData
-            setUserData(null);
+          // JWT does not exist, clear userData
+          setUserData(null);
+          setToken(null)
+          sessionStorage.clear();
         }
-    }, [setUserData]);
-
+      }, [setUserData]);
 
     const isConnected = !!userData;
     useEffect(() => {
         const fetchVideos = async () => {
             try {
                 const response = await fetch('http://localhost:880/api/videos', {
-                    method: 'GET'
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
+                    }
                 });
                 if (response.ok) {
                     const data = await response.json();
@@ -75,7 +82,11 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
         const fetchVideoData = async () => {
             try {
                 const response = await fetch(`http://localhost:880/api/users/${artistName}/videos/${vid}`, {
-                    method: 'GET'
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
+                    }
                 });
                 if (!response.ok) {
                     throw new Error('Failed to fetch video');
@@ -96,7 +107,11 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
         const fetchArtistProfile = async () => {
             try {
                 const response = await fetch(`http://localhost:880/api/users/${artistName}`, {
-                    method: 'GET'
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
+                    }
                 });
 
                 if (!response.ok) {
@@ -126,6 +141,10 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
             try {
                 const response = await fetch(`http://localhost:880/api/videos/${vid}/reactions`, {
                     method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
+                    }
                 });
                 if (!response.ok) {
                     throw new Error('Failed to fetch reactions');
@@ -147,7 +166,11 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                 setComments([]);
                 setNewComment('');
                 const response = await fetch(`http://localhost:880/api/videos/${vid}/comments`, {
-                    method: 'GET'
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
+                    }
                 });
                 if (!response.ok) {
                     throw new Error('Failed to fetch comments');
@@ -187,7 +210,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
                 },
                 body: JSON.stringify({
                     title: editedTitle,
@@ -222,6 +245,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
                 },
                 body: JSON.stringify({ token }),
             });
@@ -251,6 +275,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
                 },
                 body: JSON.stringify({
                     creator: userData.username,
@@ -285,6 +310,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
                 },
                 body: JSON.stringify({
                     currentReaction: currentReaction || null, // Current user's reaction ('like', 'unlike', or null)

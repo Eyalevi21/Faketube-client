@@ -18,8 +18,7 @@ const PersonalBox = ({ userData, setUserData }) => {
   };
   const handleSignOutClick = () => {
     {setUserData(null)}
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('user');
+    sessionStorage.clear();
   };
 
   return (
