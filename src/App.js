@@ -9,6 +9,8 @@ import UserPage from './UserPage/UserPage.js';
 import Welcome from './Welcome.js';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Upload from './upload video page/Upload.js';
+import UploadDetails from './upload video page/UploadDetails.js';
 
 function App() {
   const [userData, setUserData] = useState(null);
@@ -32,6 +34,9 @@ function App() {
       <Route path="/welcome" element={<Welcome/> } />  
       <Route path="/videos/:vid" element={<VideoWatchPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} />} />
       <Route path="/user/:username" element={<UserPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} />} />
+      <Route path="/upload" element={<Upload  theme={theme} toggleTheme={toggleTheme} />} />
+          <Route path="/upload-details" element={<UploadDetails  userData={userData}   theme={theme} toggleTheme={toggleTheme} />} />
+          <Route path="/video-watch/:id" element={<VideoWatchPage setUserData={setUserData} userData={userData} theme={theme} toggleTheme={toggleTheme} />} />
     </Routes>
   </BrowserRouter>
   );

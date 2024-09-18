@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
@@ -6,8 +6,16 @@ function Login({userData, setUserData }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [token, setToken] = useState(() => sessionStorage.getItem('jwt') || null);
     const navigate = useNavigate();
-
+    useEffect(() => {
+        if (token) {
+          // Token and userData exist, show custom notification and navigate to home
+          alert('You are already signed in. Redirecting to home')  
+          // Delay for 3 seconds before navigating
+          navigate('/');
+        }         
+      }, [navigate]);
     const handleUserChange = (e) => {
         setUsername(e.target.value);
         setError('');
@@ -46,6 +54,7 @@ function Login({userData, setUserData }) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
                 },
                 body: JSON.stringify(data)
             });
@@ -53,8 +62,8 @@ function Login({userData, setUserData }) {
             const result = await res.json();
     
             if (res.ok) {
-                localStorage.setItem('jwt', result.token);
-                localStorage.setItem('user', JSON.stringify(result.user));                
+                sessionStorage.setItem('jwt', result.token);
+                sessionStorage.setItem('user', JSON.stringify(result.user));                
                 setUserData(result.user);
                 navigate('/');
             } else {

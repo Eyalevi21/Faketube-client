@@ -34,13 +34,18 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
         } else {
             // JWT does not exist, clear userData
             setUserData(null);
+            sessionStorage.clear();
         }
     }, [setUserData]);
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
                 const response = await fetch(`http://localhost:880/api/users/${username}`, {
-                    method: 'GET'
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
+                    }
                 });
 
                 if (!response.ok) {
@@ -60,7 +65,11 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
         const fetchUserVideos = async () => {
             try {
                 const response = await fetch(`http://localhost:880/api/users/${username}/videos`, {
-                    method: 'GET'
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
+                    }
                 });
                 if (!response.ok) {
                     throw new Error('Failed to fetch videos');
