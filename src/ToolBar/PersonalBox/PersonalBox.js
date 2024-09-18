@@ -9,7 +9,7 @@ const PersonalBox = ({ userData, setUserData }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUserData = localStorage.getItem('user');
+    const storedUserData = sessionStorage.getItem('user');
     if (storedUserData) {
       setUserData(JSON.parse(storedUserData));
     } else {
@@ -28,7 +28,7 @@ const PersonalBox = ({ userData, setUserData }) => {
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
         }
-        const { token, user } = await response.json();
+        const { secondToken, user } = await response.json();
         setNickname(user.nickname);
         setProfile(user.profile);
       } catch (error) {
@@ -50,8 +50,8 @@ const PersonalBox = ({ userData, setUserData }) => {
   };
   const handleSignOutClick = () => {
     { setUserData(null) }
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('jwt');
+    sessionStorage.removeItem('user');
   };
 
   return (

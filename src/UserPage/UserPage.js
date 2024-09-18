@@ -15,7 +15,7 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
     const { doSearch } = MyComponent();
     const [videoData, setVideoData] = useState(null);
     const [userDetails, setUserDetails] = useState(null);
-    const [token, setToken] = useState(localStorage.getItem('jwt'));
+    const [token, setToken] = useState(sessionStorage.getItem('jwt'));
     const [tokenValid, setTokenValid] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedNickname, seteditedNickname] = useState('');
@@ -27,16 +27,19 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
 
 
     useEffect(() => {
-        const storedUserData = localStorage.getItem('user');
-        if (token && storedUserData) {
-            // JWT and userData exist, set userData from localStorage
-            setUserData(JSON.parse(storedUserData));
+        const storedToken = sessionStorage.getItem('jwt');
+        const storedUserData = sessionStorage.getItem('user');
+        if (storedToken && storedUserData) {
+          // JWT and userData exist, set userData from localStorage
+          setUserData(JSON.parse(storedUserData));
+          setToken(storedToken);
         } else {
-            // JWT does not exist, clear userData
-            setUserData(null);
-            sessionStorage.clear();
+          // JWT does not exist, clear userData
+          setUserData(null);
+          setToken(null)
+          sessionStorage.clear();
         }
-    }, [setUserData]);
+      }, [setUserData]);
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
@@ -51,8 +54,9 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
                 if (!response.ok) {
                     throw new Error('Failed to fetch user data');
                 }
-                const { token, user } = await response.json();
+                const { secondToken, user } = await response.json();
                 setUserDetails(user);
+                console.log("details: ", userDetails)
             } catch (error) {
                 console.error('Error fetching user details:', error);
             }
@@ -207,6 +211,8 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
             if (response.ok) {
                 console.log('User deleted successfully');
                 setUserData(null);
+                setToken(null)
+                sessionStorage.clear();
                 navigate('/login');
             } else {
                 const result = await response.json();

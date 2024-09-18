@@ -22,7 +22,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
     const [editedTitle, setEditedTitle] = useState('');
     const [editedDescription, setEditedDescription] = useState('');
     const { doSearch } = MyComponent();
-    const [token, setToken] = useState(localStorage.getItem('jwt'));
+    const [token, setToken] = useState(sessionStorage.getItem('jwt'));
     const [tokenValid, setTokenValid] = useState(false);
 
 
@@ -117,7 +117,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                     throw new Error('Failed to fetch artist profile');
                 }
 
-                const { token, user } = await response.json(); // Get the full user data
+                const { secondToken, user } = await response.json(); // Get the full user data
 
                 // Extract the profile field from the user data
                 if (user && user.profile) {
