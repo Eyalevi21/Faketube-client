@@ -333,7 +333,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                         <div className="artist-container">
                             <div className="artist-info">
                                 <img
-                                    src={`data:image/png;base64,${artistProfile}`}
+                                    src={`http://localhost:880/uploads/${artistProfile}`}      
                                     alt="Artist"
                                     className="artist-image"
                                     onClick={() => {

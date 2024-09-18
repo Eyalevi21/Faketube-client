@@ -3,6 +3,7 @@ import MyComponent from '../videoUtils';
 import { useParams } from 'react-router-dom';
 import ToolBar from '../ToolBar/ToolBar';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SideMenu from '../HomePage/SideMenu/SideMenu';
 import VideosPanel from '../HomePage/VideosPanel/VideosPanel';
 import './UserPage.css'
@@ -19,6 +20,11 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
     const [isEditing, setIsEditing] = useState(false);
     const [editedNickname, seteditedNickname] = useState('');
     const [editedProfile, setEditedProfile] = useState('');
+    const [deleteMode, setDeleteMode] = useState(false);
+    const [deleteUserMode, setDeleteUserMode] = useState(false);
+    const [videoToDelete, setVideoToDelete] = useState(null);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const storedUserData = localStorage.getItem('user');
@@ -113,12 +119,12 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
                 },
                 body: JSON.stringify({
                     nickname: editedNickname,
-                    profile: editedProfile,   
+                    profile: editedProfile,
                 }),
             });
-    
+
             const result = await response.json();
-    
+
             if (response.ok) {
                 console.log('User updated successfully:', result);
                 userDetails.nickname = editedNickname;
@@ -132,6 +138,75 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
         }
     };
 
+    const handleDeleteInitiate = () => {
+        setDeleteMode(true);
+    };
+
+    const handleDeleteUserInitiate = () => {
+        setDeleteUserMode(true);
+    };
+
+
+    const handleDeleteCancel = () => {
+        setDeleteMode(false);
+        setVideoToDelete(null);
+    };
+    const handleDeleteUserCancel = () => {
+        setDeleteUserMode(false);
+    };
+
+    const handleDeleteVideo = async (vid) => {
+        if (!vid) {
+            console.error('No video selected for deletion');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:880/api/users/${username}/videos/${vid}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                console.log('Video deleted successfully');
+                // Refresh video data or navigate to a different page
+                setVideoData(videoData.filter(video => video.vid !== vid));
+                setDeleteMode(false);
+                setVideoToDelete(null);
+            } else {
+                const result = await response.json();
+                console.error('Failed to delete video:', result.message);
+            }
+        } catch (error) {
+            console.error('Error deleting video:', error);
+        }
+    };
+
+    const handleDeleteUser = async () => {
+        try {
+            const response = await fetch(`http://localhost:880/api/users/${userDetails.username}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                console.log('User deleted successfully');
+                setUserData(null);
+                navigate('/login');
+            } else {
+                const result = await response.json();
+                console.error('Failed to delete user:', result.message);
+            }
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
+    };
 
     useEffect(() => {
         verifyToken();
@@ -140,14 +215,14 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
     const isConnected = !!userData;
     return (
         <div className="home-page-con">
-            <SideMenu userData={userData}/>
+            <SideMenu userData={userData} />
             <div className="HomePage">
                 <ToolBar theme={theme} toggleTheme={toggleTheme} userData={userData} setUserData={setUserData} />
                 <div className="user-details-container">
                     {userDetails && (
                         <div className="user-details">
                             <img
-                                src={`data:image/png;base64,${userDetails.profile}`}
+                                src={`http://localhost:880/uploads/${userDetails.profile}`}     
                                 alt="User Profile"
                                 className="profile-image"
                             />
@@ -169,10 +244,45 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
                                     )}
                                 </p>
                             </div>
+                            {(userDetails?.username === userData?.username) && tokenValid && (
+                                <div className="delete-user-zone">
+                                    {deleteUserMode ? (
+                                        <div>
+                                            <button className="delete-button" onClick={handleDeleteUser}>
+                                                Confirm Delete User
+                                            </button>
+                                            <button className="cancel-button" onClick={handleDeleteUserCancel}>
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button className="delete-button" onClick={handleDeleteUserInitiate}>
+                                            Delete User
+                                        </button>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
-                <VideosPanel videos={videoData} setUserData={setUserData} />
+                <VideosPanel
+                    videos={videoData}
+                    setUserData={setUserData}
+                    deleteMode={deleteMode}
+                    onVideoClick={handleDeleteVideo}
+                />
+                {(userDetails?.username === userData?.username) && tokenValid && Array.isArray(videoData) && videoData.length > 0 && (
+                    <div className="danger-zone">
+                        <button onClick={handleDeleteInitiate}>
+                            {deleteMode ? 'Click on video to delete' : 'Delete Video'}
+                        </button>
+                        {deleteMode && (
+                            <button className="cancel-button" onClick={handleDeleteCancel}>
+                                Cancel
+                            </button>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

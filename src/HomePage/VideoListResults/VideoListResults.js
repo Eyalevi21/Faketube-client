@@ -1,5 +1,5 @@
  import VideoItem from '../videoItem/VideoItem'
- function VideoListResults({ videos, setUserData}) {
+ function VideoListResults({ videos, setUserData, deleteMode, onVideoClick}) {
 
   const newVideoList = videos && videos.length > 0 ? (
     videos.map((video) => (
@@ -12,6 +12,8 @@
         date={video.date}
         description={video.description}
         setUserData={setUserData}
+        deleteMode={deleteMode}
+        onVideoClick={onVideoClick}
       />
     ))
   ) : null;  // Returns null if there are no videos

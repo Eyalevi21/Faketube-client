@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import formConfig from '../data/regProp.json';
-import './Reg.css'
-import processImage from '../picturetourl';
+import './Reg.css';
 
 function Reg() {
   const navigate = useNavigate();
-  // Create state for each form field based on the JSON configuration
   const initialState = formConfig.reduce((acc, field) => {
     acc[field.id] = field.initialValue;
     return acc;
   }, {});
   const [formState, setFormState] = useState(initialState);
   const [isFocused, setIsFocused] = useState({});
-  // Generic handler for input focus
+  const [selectedFile, setSelectedFile] = useState(null);  // New state for file
+
   const handleFocus = (id) => {
     if (!isFocused[id]) {
       setFormState({ ...formState, [id]: '' });
@@ -21,12 +20,10 @@ function Reg() {
     }
   };
 
-  // Generic handler for input change
   const handleChange = (id, value) => {
     setFormState({ ...formState, [id]: value });
   };
 
-  // Generic handler for input blur
   const handleBlur = (id, initialValue) => {
     if (formState[id] === '') {
       setFormState({ ...formState, [id]: initialValue });
@@ -35,54 +32,75 @@ function Reg() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validate fields before submitting
+
     if (!validateFields()) {
       alert('Please fill in all the required fields.');
       return;
     }
 
-    const processedimage = await processImage(formState.profile)  
     const data = {
-        username: formState.username,
-        password: formState.password,
-        nickname: formState.nickname,
-        profile: processedimage
+      username: formState.username,
+      password: formState.password,
+      nickname: formState.nickname,
     };
-    const res = await fetch('http://localhost:880/api/users', {
+    try {
+      const res = await fetch('http://localhost:880/api/users', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(data)
-    });
+      });
 
-    if (res.ok) {
-        navigate('/')
-    } else if(res.status == 409){
-      alert('Username already taken');
-    } else{
-      alert("something went wrong")
+      if (!res.ok) {
+        throw new Error('Error creating user');
+      }
+
+      // If a profile image is selected, upload it
+      if (selectedFile) {
+        const profileImageFormData = new FormData();
+        profileImageFormData.append('profileImage', selectedFile);
+        profileImageFormData.append('id', data.username);  // Send the user ID
+
+        const profileRes = await fetch(`http://localhost:880/api/users/${data.username}/upload-profile`, {
+          method: 'POST',
+          body: profileImageFormData
+        });
+
+        if (!profileRes.ok) {
+          throw new Error('Error uploading profile image');
+        }
+
+        alert('User registered successfully and profile image uploaded');
+      } else {
+        alert('User registered successfully');
+      }
+      navigate('/');  // Redirect after successful registration
+    } catch (error) {
+      alert(error.message);
     }
-  }
+  };
 
-  
   const validateFields = () => {
     let valid = true;
     let anyFieldEmpty = false;
-
+  
     formConfig.forEach(field => {
-      if (formState[field.id] === initialState[field.id]) {
+      if (field.type !== 'file' && formState[field.id] === initialState[field.id]) {
         anyFieldEmpty = true;
-        valid = false;
       }
     });
-    if (anyFieldEmpty) {
-      return valid
+  
+    // Check if the file input field is required and not filled
+    const fileField = formConfig.find(field => field.type === 'file');
+    if (fileField && !selectedFile) {
+      anyFieldEmpty = true;
     }
+  
+    valid = !anyFieldEmpty;
     return valid;
   };
-  
+
   return (
     <div className="container d-flex justify-content-center align-items-center full-height-Reg">
       <div className="center-rectangle-Reg">
@@ -99,14 +117,14 @@ function Reg() {
                       type="file"
                       className="form-control"
                       id={field.id}
-                      onChange={(e) => handleChange(field.id, e.target.files[0])}
+                      onChange={(e) => setSelectedFile(e.target.files[0])}  // Handle file
                       onFocus={() => handleFocus(field.id)}
                       onBlur={() => handleBlur(field.id, field.initialValue)}
                       style={{ display: 'none' }}
                     />
                     <button
                       type="button"
-                      id='picturebutton'
+                      id="picturebutton"
                       className="btn btn-secondary"
                       onClick={() => document.getElementById(field.id).click()}
                     >
