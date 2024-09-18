@@ -1,0 +1,89 @@
+.upload-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+.bi-upload-icon {
+    font-size: 48px; /* Adjust the size of the Bootstrap icon */
+}
+
+.upload-container {
+    width: 800px;  /* Increased width */
+    height: 600px;  /* Increased height */
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    position: relative;
+}
+
+.upload-exit-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.upload-header {
+    font-size: 30px;
+    margin-top: 25px;
+    color: var(--text-color);
+}
+
+.upload-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100% - 60px); /* Adjust for header height */
+}
+
+.upload-circle {
+    width: 200px;  /* Increased width */
+    height: 200px;  /* Increased height */
+    border-radius: 50%;
+    background-color: #bec1c4;
+    display: flex;
+    border-color: black;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    cursor: pointer;
+    border: 1px solid var(--text-color);
+}
+
+.upload-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px ;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+
+.upload-button:hover {
+    background-color: #0056b3;
+}
+.upload-body{
+    background-color: var(--background-color);
+}
+.upload-container{
+    background-color: var(--form-box-color);
+}
+.upload-exit-button{
+    color: var(--text-color);
+}
+
