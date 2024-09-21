@@ -23,6 +23,7 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
     const [deleteMode, setDeleteMode] = useState(false);
     const [deleteUserMode, setDeleteUserMode] = useState(false);
     const [videoToDelete, setVideoToDelete] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
     const navigate = useNavigate();
 
 
@@ -30,16 +31,16 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
         const storedToken = sessionStorage.getItem('jwt');
         const storedUserData = sessionStorage.getItem('user');
         if (storedToken && storedUserData) {
-          // JWT and userData exist, set userData from localStorage
-          setUserData(JSON.parse(storedUserData));
-          setToken(storedToken);
+            // JWT and userData exist, set userData from localStorage
+            setUserData(JSON.parse(storedUserData));
+            setToken(storedToken);
         } else {
-          // JWT does not exist, clear userData
-          setUserData(null);
-          setToken(null)
-          sessionStorage.clear();
+            // JWT does not exist, clear userData
+            setUserData(null);
+            setToken(null)
+            sessionStorage.clear();
         }
-      }, [setUserData]);
+    }, [setUserData]);
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
@@ -56,13 +57,12 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
                 }
                 const { secondToken, user } = await response.json();
                 setUserDetails(user);
-                console.log("details: ", userDetails)
             } catch (error) {
                 console.error('Error fetching user details:', error);
             }
         };
         fetchUserDetails();
-    }, [username]);
+    }, [username, setUserData, userData]);
 
 
     useEffect(() => {
@@ -114,15 +114,67 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
         }
     };
 
-    const handleEdit = async () => {
+    const handleEditNickname = async () => {
         if (tokenValid && (userDetails.username)) {
             setIsEditing(true);
             seteditedNickname(userDetails.nickname);
         }
     };
 
+    const handleEditProfile = () => {
+        if (tokenValid && (userDetails.username === userData.username)) {
+            document.getElementById('profileInput').click();
+        }
+    };
 
-    const handleSave = async () => {
+    const helpFunction = (e) => {
+        if (tokenValid && (userDetails.username === userData.username)) {
+            const file = e.target.files[0];
+            setSelectedFile(file);
+            handleFileChange(file);
+        }
+    }
+    
+    
+    
+    const handleFileChange = async (file) => {
+        console.log("changed")
+        if (tokenValid && (userDetails.username === userData.username)) {
+            if (file) {
+                console.log("the selected file is:", file)
+                const formData = new FormData();
+                formData.append('profileImage', file);
+                formData.append('id', userDetails.username);
+
+                try {
+                    const profileRes = await fetch(`http://localhost:880/api/users/${userDetails.username}/upload-profile`, {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    if (!profileRes.ok) {
+                        throw new Error('Error uploading profile image');
+                    }
+
+                    const result = await profileRes.json();
+                    console.log('Profile updated successfully:', result);
+
+                    // Update the profile image in the state
+                    setUserData(result);
+                    setSelectedFile(null); // Clear selected file after upload
+                } catch (error) {
+                    console.error('Error updating profile image:', error);
+                }
+
+            }
+        }
+    };
+
+
+
+
+
+    const handleSaveNickname = async () => {
         try {
             const response = await fetch(`http://localhost:880/api/users/${userData.username}`, {
                 method: 'PATCH',
@@ -234,12 +286,19 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
             <div className="HomePage">
                 <ToolBar theme={theme} toggleTheme={toggleTheme} userData={userData} setUserData={setUserData} />
                 <div className="user-details-container">
-                    {userDetails && (
+                    {tokenValid && userDetails && (
                         <div className="user-details">
                             <img
-                                src={`http://localhost:880/uploads/${userDetails.profile}`}     
+                                src={`http://localhost:880/uploads/${userDetails.profile}`}
                                 alt="User Profile"
                                 className="profile-image"
+                                onClick={handleEditProfile}
+                            />
+                            <input
+                                type="file"
+                                id="profileInput"
+                                style={{ display: 'none' }} // Hidden file input
+                                onChange={helpFunction}
                             />
                             <div className="user-info">
                                 <h1 className="username">{userDetails.username}</h1>
@@ -251,11 +310,11 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
                                     />
                                 ) : (
                                     userDetails.nickname
-                                )}{isConnected && !isEditing && (userData.username === userDetails.username) && (
-                                    <i className="icon-edit" onClick={handleEdit} />
+                                )}{tokenValid && isConnected && !isEditing && (userData.username === userDetails.username) && (
+                                    <i className="icon-edit" onClick={handleEditNickname} />
                                 )}
                                     {isEditing && (
-                                        <i className="icon-save" onClick={handleSave} />
+                                        <i className="icon-save" onClick={handleSaveNickname} />
                                     )}
                                 </p>
                             </div>
