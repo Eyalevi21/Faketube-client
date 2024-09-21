@@ -3,11 +3,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: var(--background-color);
+    min-height: 100vh; /* Ensure the full height container takes the entire view */
 }
 
-body {
-    background-color: var(--background-color) /* Set the background color of the body to light gray */
-}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color); /* Apply your theme background */
+  }
 
 .center-rectangle-log {
     background-color: var(--form-box-color); /* Set the background color of the rectangle to white */

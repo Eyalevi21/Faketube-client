@@ -5,3 +5,7 @@
 .home-page-con{
   background-color: var(--element-background-color);
 }
+#root {
+  min-height: 100vh; /* Ensure it covers the full height of the viewport */
+  background-color: var(--background-color); /* Apply the background color */
+}

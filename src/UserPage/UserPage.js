@@ -169,10 +169,17 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
     };
 
     const handleDeleteVideo = async (vid) => {
+        
         if (!vid) {
             console.error('No video selected for deletion');
             return;
         }
+        const isConfirmed = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
+
+        // If the user does not confirm, stop the deletion process
+            if (!isConfirmed) {
+                return;
+            }
 
         try {
             const response = await fetch(`http://localhost:880/api/users/${username}/videos/${vid}`, {
@@ -199,6 +206,13 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
     };
 
     const handleDeleteUser = async () => {
+            // Ask the user for confirmation
+        const isConfirmed = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
+
+    // If the user does not confirm, stop the deletion process
+        if (!isConfirmed) {
+            return;
+        }
         try {
             const response = await fetch(`http://localhost:880/api/users/${userDetails.username}`, {
                 method: 'DELETE',
@@ -213,7 +227,8 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
                 setUserData(null);
                 setToken(null)
                 sessionStorage.clear();
-                navigate('/login');
+                alert("User deleted successfully");
+                navigate('/');
             } else {
                 const result = await response.json();
                 console.error('Failed to delete user:', result.message);

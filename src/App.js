@@ -26,6 +26,7 @@ function App() {
   };
 
   return (
+    <div className= "App">
     <BrowserRouter>
     <Routes>
     <Route path="/" element= {<HomePage userData = {userData} setUserData={setUserData} theme={theme} toggleTheme={toggleTheme}/> }/>
@@ -35,10 +36,11 @@ function App() {
       <Route path="/videos/:vid" element={<VideoWatchPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} />} />
       <Route path="/user/:username" element={<UserPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} />} />
       <Route path="/upload" element={<Upload  theme={theme} toggleTheme={toggleTheme} />} />
-          <Route path="/upload-details" element={<UploadDetails  userData={userData}   theme={theme} toggleTheme={toggleTheme} />} />
-          <Route path="/video-watch/:id" element={<VideoWatchPage setUserData={setUserData} userData={userData} theme={theme} toggleTheme={toggleTheme} />} />
+      <Route path="/upload-details" element={<UploadDetails  userData={userData}   theme={theme} toggleTheme={toggleTheme} />} />
+      <Route path="/video-watch/:id" element={<VideoWatchPage setUserData={setUserData} userData={userData} theme={theme} toggleTheme={toggleTheme} />} />
     </Routes>
   </BrowserRouter>
+  </div>
   );
 }
 

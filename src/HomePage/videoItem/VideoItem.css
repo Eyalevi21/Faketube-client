@@ -11,11 +11,15 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background-color: transparent;
+    background-color: var(--element-background-color); /* Apply element background color */
+  }
+  #card-id {
+    /* Add styles for the specific card id here */
+    background-color: var(--element-background-color); /* Example: background */
   }
 
   .card:hover {
-    box-shadow: 0px 0px 20px var(--on-hover-video);;
+    box-shadow: 0px 0px 20px var(--on-hover-video);
   }
   
   .card-img-top img{
@@ -26,9 +30,16 @@
   
   .card-body {
     padding: 10px;
+    background-color: var(--element-background-color); /* Apply background color to card body as well */
   }
   
   .card-title {
+    font-size: 16px;
+    font-weight: bold; 
+    margin-bottom: 5px;
+    color: var(--text-color);
+  }
+  #card-title {
     font-size: 16px;
     font-weight: bold; 
     margin-bottom: 5px;

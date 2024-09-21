@@ -57,13 +57,13 @@ const PersonalBox = ({ userData, setUserData }) => {
   return (
     <div className="PersonalBox">
       <div className="GreetingText">Hello, {nickname}!</div>
-      <div className="UserProfile" onClick={handleProfileClick}>
-        <img src={`http://localhost:880/uploads/${profile}`} alt={nickname} className="UserImage" />
+      <div className="UserProfile" >
+        <img src={`http://localhost:880/uploads/${profile}`} alt={nickname} onClick={handleProfileClick} className="UserImage" />
         <div className={`ButtonContainer ${showButtons ? 'show' : ''}`}>
-          <button className="Button" onClick={handleSignOutClick}>
+          <button className="Button" onClick={handleSignOutClick} disabled={!showButtons}>
             Sign Out
           </button>
-          <button className="Button" onClick={handleUploadClick}>
+          <button className="Button" onClick={handleUploadClick} disabled={!showButtons}>
             Upload
           </button>
         </div>

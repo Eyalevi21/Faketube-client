@@ -10,13 +10,13 @@
   
   .UserProfile {
     display: flex;
-    align-items: center;
-    cursor: pointer;
+    align-items: center;   
     position: relative; /* Ensure that the button is positioned relative to this */
     flex-direction: column; /* Stack image and text vertically */
   }
   
   .UserImage {
+    cursor: pointer;
     width: 50px; /* Adjust size if necessary */
     height: 50px; /* Adjust size if necessary */
     border-radius: 50%;
@@ -65,4 +65,7 @@
   .Button:hover {
     background-color: #5a6268; /* Slightly darker grey on hover */
   }
-  
+  .Button:disabled {
+    cursor: default; /* Shows the regular cursor */
+    opacity: 0.5; /* Optional: Makes the button look visually disabled */
+  }

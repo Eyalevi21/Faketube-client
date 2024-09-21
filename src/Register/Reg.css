@@ -1,16 +1,36 @@
 .full-height-Reg {
-  height: 95vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  padding: 0;
+  width: 100vw; /* Ensure full viewport width */
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: var(--background-color);
+}
+
+.container {
+  background-color: var(--background-color);
+}
+
 body {
-  background-color: var(--form-box-color); /* Set the background color of the body to light gray */
+  background-color: var(--background-color); /* Set the background color of the body */
 }
+
 .center-rectangle-Reg {
-  background-color: var(--form-box-color); /* Set the background color of the rectangle to white */
-  padding: 80px; /* Increase the padding to make the rectangle bigger */
+  background-color: var(--form-box-color);
+  padding: 80px;
   border-radius: 10px;
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
-  width: 800px; /* Set the width of the rectangle */
-  max-width: 90%; /* Ensure the rectangle doesn't exceed 90% of the viewport width */
+  max-width: 800px; /* Limit the width of the form */
+  width: 100%; /* Responsive within the limits */
+  margin: 0 auto; /* Center the form */
 }
 
 .center-rectangle-Reg h2 {
@@ -19,19 +39,15 @@ body {
   color: var(--text-color);
 }
 
-.center-rectangle-Reg input,.center-rectangle-Reg button {
-  font-size: 18px; /* Increase the font size of the inputs and buttons */
-  padding: 10px; /* Increase the padding of the inputs and buttons */
-  width: 200px
+.center-rectangle-Reg input, .center-rectangle-Reg button {
+  font-size: 18px;
+  padding: 10px;
+  width: 200px;
 }
-#registerbtn{
-  margin-top: 18px; 
+
+#registerbtn {
+  margin-top: 18px;
   font-size: 22px;
   height: 50px;
   width: 200px;
 }
-
-
-
-
-

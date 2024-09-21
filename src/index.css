@@ -11,12 +11,11 @@
   --side-menu-background-color: rgba(135, 139, 140, 0.966);
   --form-box-color:#c0c0c0;
   --on-hover-video:#f7971d;
-  
 }
 [data-theme="dark"] {
   --background-color: rgb(0, 0, 0); /* Example from your dark homePage CSS */
   --text-color: #ffffff;
-  --element-background-color: rgba(131, 131, 131, 0.144);
+  --element-background-color: rgba(131, 131, 131, 0.075);
   --element-text-color: #ffffff;
   --element-background-color-hover: rgba(0, 0, 0, 0.911);
   --toolbar-backgroung-color: rgba(0, 0, 0, 0.911);
@@ -28,9 +27,6 @@
   --on-hover-video:#f7971d;
   
 }
-
-
-
 
 
 .theme-toggle-button {
@@ -69,6 +65,17 @@
   padding: 5px;
   position: relative;
   transition: background-color 0.3s;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color); /* Apply your theme background */
+}
+
+.full-height-log {
+  min-height: 100vh; /* Ensure the full height container takes the entire view */
 }
 
 .dark_mode_label svg {

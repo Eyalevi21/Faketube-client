@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 
 
-function MiniVideoItem({ vid, imageName, title, artist, views, date }) {
+function MiniVideoItem({ vid, imageName, title, artist, views }) {
     const navigate = useNavigate();
     function handleVidClick(){
         navigate(`/videos/${vid}`);

@@ -1,10 +1,28 @@
-/* VideosPanel.css */
 .VideosPanel {
-    display: flex; /* Use flexbox for horizontal layout */
-    flex-wrap: wrap; /* Allow wrapping of video items */
-    justify-content: center; /* Horizontally distribute items with space around */
-    padding: 100px; /* Add padding to the container */
-    gap: 80px;
-    margin-left: 60px;
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 100px 60px 0 60px; /* Top, right, bottom, left */
+  gap: 80px;
+  margin-left: 60px;
+}
+
+.VideosPanel.has-videos {
+  background-color: var(--element-background-color); /* Apply element background color when videos exist */
+}
+
+.VideosPanel.no-videos {
+  background-color: var(--background-color); /* Apply default background color when no videos */
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--element-background-color); /* Background for the page */
+}
+
+#root {
+  background-color: var(--element-background-color);
+  height: 100%;
+}
