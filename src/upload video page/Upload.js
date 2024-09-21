@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Upload.css';
 import { BiUpload } from 'react-icons/bi';
@@ -7,20 +7,15 @@ import MyComponent from '../videoUtils';
 function Upload() {
   const navigate = useNavigate();
   const { generateThumbnail } = MyComponent();
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [thumbnailUrl, setThumbnailUrl] = useState('');
 
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file && file.type.startsWith('video/')) {
-      try {
-        // Generate the thumbnail locally and store it temporarily
-        const thumbnail = await generateThumbnail(file);
-        setThumbnailUrl(thumbnail);
-        setSelectedFile(file);
-
-        // Automatically navigate to the second page after selecting the video
-        navigate('/upload-details', thumbnailUrl={thumbnailUrl}, file={selectedFile});
+      try {    
+        // Generate thumbnail locally
+        const thumbnailUrl = await generateThumbnail(file);
+        // Navigate to the second page with file and thumbnail in state
+        navigate('/upload-details', { state: { file, thumbnailUrl } });
       } catch (error) {
         console.error(error);
         alert('Failed to process video file.');
@@ -48,7 +43,9 @@ function Upload() {
           <div className="upload-circle" onClick={handleFileUploadClick}>
             <BiUpload className="bi-upload-icon" />
           </div>
-          <button className="upload-button" onClick={handleFileUploadClick}>Choose Files</button>
+          <button className="upload-button" onClick={handleFileUploadClick}>
+            Choose Files
+          </button>
         </div>
         <input
           type="file"
