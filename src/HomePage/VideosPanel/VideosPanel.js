@@ -3,7 +3,7 @@ import VideoListResults from '../VideoListResults/VideoListResults';
 
 function VideosPanel({ videos, setUserData, deleteMode, onVideoClick }) {
   // Conditionally set the class based on whether videos are available
-  const panelClass = videos.length > 0 ? 'VideosPanel has-videos' : 'VideosPanel no-videos';
+  const panelClass = videos && videos.length > 0 ? 'VideosPanel has-videos' : 'VideosPanel no-videos';
 
   return (
     <div className={panelClass}>
