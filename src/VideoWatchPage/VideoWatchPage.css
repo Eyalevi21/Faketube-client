@@ -1,18 +1,23 @@
 .main-content {
     display: flex;
-    margin-top: 90px;
+    margin-top: 80px;
     /* Increased top margin to leave more space for the search bar */
     width: 99%;
+    background-color: var(--background-color);
 }
 
 .artist-container {
     display: flex;
-    flex-direction: column; /* Stack the artist-info and artist-details vertically */
+    justify-content: center; /* Center horizontally */
+    align-items: center;     /* Center vertically if needed */
+    flex-direction: column;  /* Stack the image and text vertically */
+    width: 100%;  
 }
 .artist-info {
     display: flex;
     align-items: center; /* Align the image and artist name horizontally */
     margin-bottom: 10px; /* Adds space between the artist-info and artist-details */
+    text-align: center; 
 }
 
 .artist-image {
@@ -28,15 +33,27 @@
     display: flex;
     flex-direction: column; /* Stacks views and description vertically */
 }
+#root {
+    min-height: 100vh; /* Ensure it covers the full height of the viewport */
+    background-color: var(--background-color); /* Apply the background color */
+  }
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color); /* Background for the page */
+  }
+  
 
 .video-watch-page {
     flex: 1;
     display: flex;
     flex-direction: column;
     padding: 50px;
+    margin-top: -10px; /* Adjust this value based on the gap size */
     box-sizing: border-box;
-    width: 80%;
-    /* leave space for the right video menu */
+    width: 100%;
+    max-width: 80%;
 }
 
 .video-container {
@@ -90,6 +107,19 @@ textarea:focus {
     outline: none;
     border-color: #007bff;
 }
+.comment {
+    text-align: left; /* Align comments to the left */
+}
+
+.comment-dot {
+    margin-bottom: 4px;
+    color: var(--text-color) !important;;
+    font-size: 24px; /* Adjust the size of the dot */
+    color: #333;     /* Adjust the color of the dot */
+    margin-right: 8px; /* Add space between the dot and the comment */
+    vertical-align: middle; /* Align the dot with the text */
+    display: inline-block; /* Ensure the dot is on the same line as the text */
+}
 
 .comments-section button {
     padding: 10px;
@@ -109,9 +139,13 @@ textarea:focus {
 }
 
 
-.h1-font, h1 {
+.h1-font, h1 {  
     font-size: 25px;
     color: var(--text-color);
+}
+.h1-font{
+    margin-top: 12px;
+    text-align: center !important;
 }
 
 .views-font, p {
@@ -119,6 +153,7 @@ textarea:focus {
 }
 .description-font, p {
     font-size: 17px;
+    color: var(--text-color);
 }
 
 .icon-edit {

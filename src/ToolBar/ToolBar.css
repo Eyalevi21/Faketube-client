@@ -1,21 +1,24 @@
 .ToolBar {
     display: flex;
-    justify-content: space-between; /* Change to space-between to align items on the ends */
+    justify-content: space-between; /* Align items on both ends */
     align-items: center;
     height: 80px;
-    background-color: var(--toolbar-backgroung-color);
+    background-color: var(--toolbar-background-color); /* Corrected spelling */
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 1000;
     box-shadow: 0 0 2px var(--element-background-color);
-    padding: 0 20px; /* Add some padding to the left and right */
+    padding: 0 20px; /* Padding on left and right */
 }
 .centerContainer {
     display: flex;
     justify-content: center;
     width: auto;
     flex-grow: 1; /* Allow it to grow and take available space */
+}
+.personal-box {
+    margin-bottom: 0px; /* Adjust the bottom margin if necessary */
 }
 
 .WebLogo {
@@ -35,7 +38,7 @@
     height: auto;
     width: auto;
 }
-.darkModeContainer {
+.darkmode-container {
     margin-top: 20px;
     display: flex;
     align-items: center; /* Vertically center */

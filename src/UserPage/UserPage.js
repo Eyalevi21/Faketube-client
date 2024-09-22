@@ -304,7 +304,7 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
                     {tokenValid && userDetails && (
                         <div className="user-details">
                             <img
-                                src={`http://localhost:880/uploads/${userDetails.profile}`}
+                                src={`http://localhost:880/profileImages/${userDetails.profile}`}
                                 alt="User Profile"
                                 className="profile-image"
                                 onClick={handleEditProfile}

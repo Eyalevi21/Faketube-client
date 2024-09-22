@@ -24,7 +24,9 @@ function ToolBar({doSearch, userData, setUserData, theme, toggleTheme, setSearch
               <SearchBar doSearch={doSearch} setSearchResult={setSearchResult} />
           </div>
           <LoginButton userData={userData} setUserData={setUserData}/>
+          <div className="darkmode-container"> {/* Add this class */}
           <DarkMode theme={theme} toggleTheme={toggleTheme}/>  
+      </div>   
       </div>
     );
   }
@@ -38,8 +40,10 @@ function ToolBar({doSearch, userData, setUserData, theme, toggleTheme, setSearch
           <div className='centerContainer'>
               <SearchBar doSearch={doSearch} setSearchResult={setSearchResult} />
           </div>
-          <PersonalBox userData={userData} setUserData={setUserData} />
-          <DarkMode theme={theme} toggleTheme={toggleTheme}/>            
+          <PersonalBox userData={userData} setUserData={setUserData} className="personal-box" />          
+          <div className="darkmode-container"> {/* Add this class */}
+          <DarkMode theme={theme} toggleTheme={toggleTheme}/>  
+      </div>       
       </div>
     );
   }

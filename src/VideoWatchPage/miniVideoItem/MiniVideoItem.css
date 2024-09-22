@@ -2,8 +2,15 @@
     display: flex;
     width: 350px;
     cursor: pointer;
+    background-color: transparent !important;
+}
+.col-md-4, .col-md-8 {
+  background-color: transparent !important; /* Ensure columns don't have a white background */
 }
 
+.video-row {
+  background-color: var(--element-background-color) !important;
+}
 .text-author{
     font-size: 15px;
     color: var(--mini-video-text-color);

@@ -4,7 +4,7 @@
   justify-content: center;
   padding: 100px 60px 0 60px; /* Top, right, bottom, left */
   gap: 80px;
-  margin-left: 60px;
+  margin-left: 60px;  
 }
 
 .VideosPanel.has-videos {

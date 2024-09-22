@@ -6,7 +6,9 @@ import MiniVideoItem from './miniVideoItem/MiniVideoItem';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
+
 function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchResult }) {
+    const [loading, setLoading] = useState(true); // Add loading state
     const navigate = useNavigate();
     const { vid } = useParams();
     const videoRef = useRef(null);
@@ -44,6 +46,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
     const isConnected = !!userData;
     useEffect(() => {
         const fetchVideos = async () => {
+            setLoading(true); // Start loading
             try {
                 const response = await fetch('http://localhost:880/api/videos', {
                     method: 'GET',
@@ -60,6 +63,9 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                 }
             } catch (err) {
                 console.error('Error fetching videos:', err);
+            }
+            finally{
+                setLoading(false); // End loading
             }
         };
 
@@ -359,7 +365,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                         <div className="artist-container">
                             <div className="artist-info">
                                 <img
-                                    src={`http://localhost:880/uploads/${artistProfile}`}      
+                                    src={`http://localhost:880/profileImages/${artistProfile}`}      
                                     alt="Artist"
                                     className="artist-image"
                                     onClick={() => {
@@ -422,7 +428,10 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                         {comments.length > 0 ? (
                             comments.map((comment) => (
                                 <div key={comment._id} className="comment">
-                                    <p><strong>{comment.creator}</strong>: {comment.content}</p>
+                                    <p>
+                                        <span className="comment-dot">•</span> {/* Big dot */}
+                                        <strong>{comment.creator}</strong>: {comment.content}
+                                    </p>
                                 </div>
                             ))
                         ) : (
@@ -438,19 +447,24 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                 </div>
 
                 <div className="related-videos">
-                    {videoList.map((video) => {
-                        return (
-                            <MiniVideoItem
-                                vid={video.vid}
-                                imageName={video.imageName}
-                                title={video.title}
-                                artist={video.artist}
-                                views={video.views}
-                                date={video.date}
-                            />
-                        );
-                    })}
-                </div>
+  {loading ? (
+    <p>Loading videos...</p>  // Display a loading message or spinner while fetching
+  ) : videoList && videoList.length > 0 ? (
+    videoList.map((video) => (
+      <MiniVideoItem
+        key={video.vid} // Always include a unique key when mapping components
+        vid={video.vid}
+        imageName={video.imageName}
+        title={video.title}
+        artist={video.artist}
+        views={video.views}
+        date={video.date}
+      />
+    ))
+  ) : (
+    <p>No related videos found</p> // Display a fallback if no videos are found
+  )}
+</div>
 
             </div>
         </div>

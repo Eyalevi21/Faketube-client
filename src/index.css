@@ -4,7 +4,7 @@
   --element-background-color: #f8f9fa;
   --element-text-color: #000000;
   --element-background-color-hover: #e0e0e0;
-  --toolbar-backgroung-color: rgba(140, 135, 135, 0.911);
+  --toolbar-background-color: rgba(140, 135, 135, 0.911);
   --card-text-color: rgba(6, 6, 6, 0.911);
   --mini-video-text-color: rgba(6, 6, 6, 0.911);
   --box-shadow-color: rgba(140, 135, 135, 0.911);
@@ -18,7 +18,7 @@
   --element-background-color: rgba(131, 131, 131, 0.075);
   --element-text-color: #ffffff;
   --element-background-color-hover: rgba(0, 0, 0, 0.911);
-  --toolbar-backgroung-color: rgba(0, 0, 0, 0.911);
+  --toolbar-background-color: rgba(0, 0, 0, 0.911);
   --card-text-color: rgba(251, 246, 246, 0.911);
   --mini-video-text-color: rgba(251, 248, 248, 0.911);
   --box-shadow-color: rgba(140, 135, 135, 0.911);

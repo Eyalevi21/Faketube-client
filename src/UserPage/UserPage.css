@@ -1,8 +1,20 @@
 .user-details-container {
     padding: 10px;
-    margin-left: 300px; /* Adjust as needed to move right */
-    margin-top: 75px;  /* Adjust as needed to move down */
+    margin-left: 300px; /* Adjust to align correctly */
+    margin-top: 80px; /* Adjust as needed to move down */
 }
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color); /* Make sure this is set to your preferred background color */
+}
+
+#root {
+    min-height: 100vh; /* Ensure it covers the full height of the viewport */
+    background-color: var(--background-color); /* Apply the background color */
+  }
 
 .user-details {
     display: flex;
@@ -34,10 +46,10 @@
     margin-top: 5px;
 }
 .danger-zone {
+    background-color: var(--element-background-color) !important;
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
-    margin: 20px 0; /* Add some space above and below */
     padding: 20px; /* Add padding inside the container */
     background-color: #ffdddd; /* Light red background */
     border: 2px solid #ff0000; /* Red border */
@@ -47,7 +59,7 @@
 .danger-zone button {
     font-size: 1.5rem; /* Larger font size */
     color: #ff0000; /* Red text color */
-    background-color: #fff; /* White background for button */
+    background-color: var(--element-background-color) !important; /* White background for button */
     border: 1px solid #ff0000; /* Red border for button */
     padding: 10px 20px; /* Add padding inside the button */
     cursor: pointer; /* Pointer cursor on hover */
@@ -61,7 +73,7 @@
 }
 
 .danger-zone button:hover {
-    background-color: darkred; /* Darker red on hover */
+    background-color: darkred !important; /* Darker red on hover */
     cursor: pointer;
 }
 
