@@ -8,19 +8,20 @@ function UploadDetails({ userData }) {
   const { file, thumbnailUrl } = location.state || {}; // Get file and thumbnail from location state
   const [videoName, setVideoName] = useState('');
   const [description, setDescription] = useState('');
-  const [token, setToken] = useState(sessionStorage.getItem('jwt'));
+  const [token, setToken] = useState(localStorage.getItem('jwt'));
   useEffect(() => {
     console.log("file: ", file);
     console.log("thumb: ", thumbnailUrl)
-    const storedToken = sessionStorage.getItem('jwt');
-    const storedUserData = sessionStorage.getItem('user');
+    const storedToken = localStorage.getItem('jwt');
+    const storedUserData = localStorage.getItem('user');
     if (storedToken && storedUserData) {
       // JWT and userData exist, set userData from localStorage      
       setToken(storedToken);
     } else {
-      // JWT does not exist, clear userData
+      // JWT does not exist, clear userData and token
       setToken(null)
-      sessionStorage.clear();
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('user');
     }
   }, navigate);
   const handleSubmit = async (e) => {

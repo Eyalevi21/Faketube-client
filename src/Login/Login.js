@@ -6,7 +6,7 @@ function Login({userData, setUserData }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [token, setToken] = useState(() => sessionStorage.getItem('jwt') || null);
+    const [token, setToken] = useState(() => localStorage.getItem('jwt') || null);
     const navigate = useNavigate();
     useEffect(() => {
         if (token) {
@@ -62,8 +62,8 @@ function Login({userData, setUserData }) {
             const result = await res.json();
     
             if (res.ok) {
-                sessionStorage.setItem('jwt', result.token);
-                sessionStorage.setItem('user', JSON.stringify(result.user));                
+                localStorage.setItem('jwt', result.token);
+                localStorage.setItem('user', JSON.stringify(result.user));                
                 setUserData(result.user);
                 navigate('/');
             } else {

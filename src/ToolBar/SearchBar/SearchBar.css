@@ -6,14 +6,21 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     display: flex;
     align-items: center;
-    background-color: #fff; /* Add background color */
+    background-color: #fff;
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+}
+
+/* Apply focus styles to the entire container when input is focused */
+.SearchBar:focus-within {
+    border-color: #007bff; /* Blue border on focus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Subtle blue shadow */
 }
 
 .SearchBar input {
     border: none;
     outline: none;
     flex: 1;
-    padding: 10px; /* Add padding inside input */
+    padding: 10px;
     border-radius: 20px 0 0 20px; /* Round corners */
 }
 
@@ -23,10 +30,10 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-    padding: 10px; /* Add padding inside button */
+    padding: 10px;
     border-radius: 0 20px 20px 0; /* Round corners */
 }
 
 .SearchBar button i {
-    font-size: 20px; /* Adjust icon size */
+    font-size: 20px;
 }

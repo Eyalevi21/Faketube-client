@@ -15,7 +15,7 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
     const { doSearch } = MyComponent();
     const [videoData, setVideoData] = useState(null);
     const [userDetails, setUserDetails] = useState(null);
-    const [token, setToken] = useState(sessionStorage.getItem('jwt'));
+    const [token, setToken] = useState(localStorage.getItem('jwt'));
     const [tokenValid, setTokenValid] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedNickname, seteditedNickname] = useState('');
@@ -28,8 +28,8 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
 
 
     useEffect(() => {
-        const storedToken = sessionStorage.getItem('jwt');
-        const storedUserData = sessionStorage.getItem('user');
+        const storedToken = localStorage.getItem('jwt');
+        const storedUserData = localStorage.getItem('user');
         if (storedToken && storedUserData) {
             // JWT and userData exist, set userData from localStorage
             setUserData(JSON.parse(storedUserData));
@@ -38,7 +38,8 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
             // JWT does not exist, clear userData
             setUserData(null);
             setToken(null)
-            sessionStorage.clear();
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('user');
         }
     }, [setUserData]);
     useEffect(() => {
@@ -62,7 +63,7 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
             }
         };
         fetchUserDetails();
-    }, [username, setUserData, userData]);
+    }, [username, setUserData, userData, navigate]);
 
 
     useEffect(() => {
@@ -92,17 +93,17 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
             console.log('No token to verify');
             return;
         }
-
+    
         try {
             const response = await fetch('http://localhost:880/api/tokens/verify-token', {
-                method: 'POST',
+                method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ token }),
+                    'Authorization': `Bearer ${token}`
+                }
             });
-
+    
             const data = await response.json();
+            
             if (data.valid) {
                 setTokenValid(true);
             } else {
@@ -113,6 +114,7 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
             console.error('Error verifying token:', error);
         }
     };
+    
 
     const handleEditNickname = async () => {
         if (tokenValid && (userDetails.username)) {
@@ -262,46 +264,50 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
         const isConfirmed = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
 
     // If the user does not confirm, stop the deletion process
-        if (!isConfirmed) {
+        if (!isConfirmed ) {
             return;
         }
-        try {
-            const response = await fetch(`http://localhost:880/api/users/${userDetails.username}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (response.ok) {
-                console.log('User deleted successfully');
-                setUserData(null);
-                setToken(null)
-                sessionStorage.clear();
-                alert("User deleted successfully");
-                navigate('/');
-            } else {
-                const result = await response.json();
-                console.error('Failed to delete user:', result.message);
+        else if(tokenValid){
+            try {
+                const response = await fetch(`http://localhost:880/api/users/${userDetails.username}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+    
+                if (response.ok) {
+                    console.log('User deleted successfully');
+                    setUserData(null);
+                    setToken(null)
+                    localStorage.removeItem('jwt');
+                    localStorage.removeItem('user');
+                    alert("User deleted successfully");
+                    navigate('/');
+                } else {
+                    const result = await response.json();
+                    console.error('Failed to delete user:', result.message);
+                }
+            } catch (error) {
+                console.error('Error deleting user:', error);
             }
-        } catch (error) {
-            console.error('Error deleting user:', error);
         }
+    
     };
 
     useEffect(() => {
         verifyToken();
-    }, [token]);
+    }, [navigate]);
 
     const isConnected = !!userData;
     return (
         <div className="home-page-con">
             <SideMenu userData={userData} />
             <div className="HomePage">
-                <ToolBar theme={theme} toggleTheme={toggleTheme} userData={userData} setUserData={setUserData} />
+                <ToolBar theme={theme} toggleTheme={toggleTheme} userData={userData} setUserData={setUserData} token={token} setToken={setToken} />
                 <div className="user-details-container">
-                    {tokenValid && userDetails && (
+                    {userDetails && (
                         <div className="user-details">
                             <img
                                 src={`http://localhost:880/profileImages/${userDetails.profile}`}

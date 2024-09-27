@@ -7,19 +7,20 @@ import './HomePage.css';
 
 function HomePage({ theme, toggleTheme, userData, setUserData}) {
   const [videos, setVideos] = useState([]);
-  const [token, setToken] = useState(() => sessionStorage.getItem('jwt') || null);
+  const [token, setToken] = useState(() => localStorage.getItem('jwt') || null);
   useEffect(() => {
-    const storedToken = sessionStorage.getItem('jwt');
-    const storedUserData = sessionStorage.getItem('user');
+    const storedToken = localStorage.getItem('jwt');
+    const storedUserData = localStorage.getItem('user');
     if (storedToken && storedUserData) {
       // JWT and userData exist, set userData from localStorage
       setUserData(JSON.parse(storedUserData));
       setToken(storedToken);
     } else {
-      // JWT does not exist, clear userData
+      // JWT does not exist, clear userData and token
       setUserData(null);
       setToken(null)
-      sessionStorage.clear();
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('user');
     }
   }, [setUserData]);
 
@@ -53,7 +54,7 @@ function HomePage({ theme, toggleTheme, userData, setUserData}) {
     <div className = "home-page-con">
       <SideMenu theme={theme} toggleTheme={toggleTheme} userData={userData}/>
       <div className="HomePage">
-        <ToolBar theme={theme} toggleTheme={toggleTheme} userData={userData} setUserData={setUserData} />
+        <ToolBar  setToken={setToken} token={token} theme={theme} toggleTheme={toggleTheme} userData={userData} setUserData={setUserData} setVideos={setVideos} />
         <div className="user-info">
           {/* Display user info as needed */}
         </div>

@@ -13,7 +13,7 @@ function Reg() {
   const [isFocused, setIsFocused] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);  // New state for file
 
-  const [token, setToken] = useState(() => sessionStorage.getItem('jwt') || null);
+  const [token, setToken] = useState(() => localStorage.getItem('jwt') || null);
   useEffect(() => {
     if (token) {
       // Token and userData exist, show custom notification and navigate to home

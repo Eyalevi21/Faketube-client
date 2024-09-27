@@ -2,18 +2,21 @@ import React, { useState, useEffect } from 'react';
 import './PersonalBox.css';
 import { useNavigate } from 'react-router-dom';
 
-const PersonalBox = ({ userData, setUserData }) => {
+const PersonalBox = ({ userData, setUserData, token, setToken }) => {
   const [showButtons, setShowButtons] = useState(false);
   const [nickname, setNickname] = useState(null);
   const [profile, setProfile] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUserData = sessionStorage.getItem('user');
+    const storedUserData = localStorage.getItem('user');
     if (storedUserData) {
       setUserData(JSON.parse(storedUserData));
     } else {
       setUserData(null);
+      setToken(null)
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('user');
     }
   }, [setUserData]);
 
@@ -22,7 +25,11 @@ const PersonalBox = ({ userData, setUserData }) => {
     const fetchUserDetails = async () => {
       try {
         const response = await fetch(`http://localhost:880/api/users/${userData.username}`, {
-          method: 'GET'
+          method: 'GET',
+          headers: {
+            'Authorization': token ? `Bearer ${token}` : '',
+            'Content-Type': 'application/json' // This is optional, but good to include
+          }
         });
 
         if (!response.ok) {
@@ -49,9 +56,10 @@ const PersonalBox = ({ userData, setUserData }) => {
     setShowButtons(!showButtons);
   };
   const handleSignOutClick = () => {
-    { setUserData(null) }
-    sessionStorage.removeItem('jwt');
-    sessionStorage.removeItem('user');
+    { setUserData(null)}
+    {setToken(null)}
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('user');
   };
 
   return (

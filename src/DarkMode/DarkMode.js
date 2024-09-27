@@ -4,7 +4,6 @@ import { ReactComponent as Moon } from "./Moon.svg";
 import "./DarkMode.css";
 
 const DarkMode = ({ theme, toggleTheme }) => {
-    console.log(`Current theme: ${theme}`);
 
     return (
         <div className='dark_mode'>

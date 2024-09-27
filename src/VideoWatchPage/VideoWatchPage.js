@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 
-function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchResult }) {
+function VideoWatchPage({ userData, setUserData, theme, toggleTheme }) {
     const [loading, setLoading] = useState(true); // Add loading state
     const navigate = useNavigate();
     const { vid } = useParams();
@@ -24,24 +24,25 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
     const [editedTitle, setEditedTitle] = useState('');
     const [editedDescription, setEditedDescription] = useState('');
     const { doSearch } = MyComponent();
-    const [token, setToken] = useState(sessionStorage.getItem('jwt'));
+    const [token, setToken] = useState(localStorage.getItem('jwt'));
     const [tokenValid, setTokenValid] = useState(false);
 
 
     useEffect(() => {
-        const storedToken = sessionStorage.getItem('jwt');
-        const storedUserData = sessionStorage.getItem('user');
+        const storedToken = localStorage.getItem('jwt');
+        const storedUserData = localStorage.getItem('user');
         if (storedToken && storedUserData) {
           // JWT and userData exist, set userData from localStorage
           setUserData(JSON.parse(storedUserData));
           setToken(storedToken);
         } else {
-          // JWT does not exist, clear userData
+          // JWT does not exist, clear userData and token
           setUserData(null);
           setToken(null)
-          sessionStorage.clear();
+          localStorage.removeItem('jwt');
+          localStorage.removeItem('user');
         }
-      }, [setUserData]);
+      }, [navigate]);
 
     const isConnected = !!userData;
     useEffect(() => {
@@ -123,8 +124,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
                     throw new Error('Failed to fetch artist profile');
                 }
 
-                const { secondToken, user } = await response.json(); // Get the full user data
-
+                const { secondToken, user } = await response.json(); // Get the full user data                
                 // Extract the profile field from the user data
                 if (user && user.profile) {
                     setArtistProfile(user.profile); // Set the profile data in your state
@@ -244,18 +244,17 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
             console.log('No token to verify');
             return;
         }
-
+    
         try {
             const response = await fetch('http://localhost:880/api/tokens/verify-token', {
-                method: 'POST',
+                method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
-                    ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
-                },
-                body: JSON.stringify({ token }),
+                    'Authorization': `Bearer ${token}`
+                }
             });
-
+    
             const data = await response.json();
+            
             if (data.valid) {
                 setTokenValid(true);
             } else {
@@ -342,18 +341,19 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setSearchRe
 
 
     if (!videoData) {
-        return <div>Loading...</div>;
+        return <div>Video not found</div>;
     }
     const { title, artist, date, views, imageName, videoFile, description } = videoData;
     return (
         <div>
             <ToolBar
+                token={token}
+                setToken={setToken}
                 theme={theme}
                 toggleTheme={toggleTheme}
                 doSearch={doSearch}
                 userData={userData}
-                setUserData={setUserData}
-                setSearchResult={setSearchResult}
+                setUserData={setUserData}               
             />
             <div className="main-content">
                 <div className="video-watch-page">

@@ -13,17 +13,45 @@ import Upload from './upload video page/Upload.js';
 import UploadDetails from './upload video page/UploadDetails.js';
 
 function App() {
-  const [userData, setUserData] = useState(null);
-  const [theme, setTheme] = useState('light');
+  const [userData, setUserData] = useState(() => localStorage.getItem('user') || null);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
   const [searchResult, setSearchResult] = useState([]);
+  useEffect(() => {
+    // Function to check server health, if the server is down the localStorage will be cleared
+    const checkServerHealth = async () => {
+        try {
+            const response = await fetch('http://localhost:880/api/connection-check');
+            if (!response.ok) {
+                throw new Error('Server is down');
+            }            
+        } catch (error) {
+            console.error('Server unreachable, logging out:', error);
+            if (userData) {                
+                alert("The server is currently down. Please try logging in again once the server is back online.");
+            }
+            setUserData(null);
+            localStorage.clear(); // Clear session storage (adjust if you meant localStorage)
+        }
+    };
 
-  useEffect(() => {  
+    // Set an interval to periodically check server health
+    const intervalId = setInterval(checkServerHealth, 60000); // Check every 60 seconds
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
+  useEffect(() => {
+  // Apply the current theme to the document element
     document.documentElement.setAttribute('data-theme', theme);
+
+  // Store the theme in localStorage
+    localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const toggleTheme = () => {
+   const toggleTheme = () => {
+    // Toggle between light and dark themes
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
+  };;
 
   return (
     <div className= "App">
