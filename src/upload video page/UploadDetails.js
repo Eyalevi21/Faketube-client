@@ -24,8 +24,42 @@ function UploadDetails({ userData }) {
       localStorage.removeItem('user');
     }
   }, navigate);
+  const verifyToken = async () => {
+    if (!token) {
+        console.log('No token to verify');
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:880/api/tokens/verify-token', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+        
+        if (data.valid) {
+            return true
+        } else {
+            return false
+            console.error('Token is invalid or expired:', data.message);
+        }
+    } catch (error) {
+        console.error('Error verifying token:', error);
+    }
+};
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const isTokenValid = await verifyToken(); // Verify the token here
+    if (!isTokenValid) {
+      alert('Invalid or expired session. Please log in again.');
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('user');
+      navigate('/login');
+      return; 
+    }
     // Prepare form data to send the file and metadata together
     const formData = new FormData();
     formData.append('file', file);
