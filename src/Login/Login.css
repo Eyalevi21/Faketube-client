@@ -13,6 +13,9 @@ html, body {
     padding: 0;
     background-color: var(--background-color); /* Apply your theme background */
   }
+  .error-message{
+color: red !important;
+  }
 
 .center-rectangle-log {
     background-color: var(--form-box-color); /* Set the background color of the rectangle to white */

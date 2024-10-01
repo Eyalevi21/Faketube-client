@@ -8,10 +8,15 @@ import PersonalBox from './PersonalBox/PersonalBox';
 import LoginButton from './LoginButton/LoginButton'
 import DarkMode from '../DarkMode/DarkMode'
 
-function ToolBar({userData, setUserData, theme, toggleTheme, setVideos, token, setToken}) {
+function ToolBar({userData, setUserData, theme, toggleTheme, setVideos, token, setToken, fetchVideos}) {
   const navigate = useNavigate();
+  const location = useLocation();
   const onFakeTubeClick = ()=>{
-    navigate('/');
+    if (location.pathname === '/') {
+      fetchVideos();  // Call fetchVideos directly if already on the home page
+  } else {
+      navigate('/');  // Navigate to home page if not already there
+  }
   }
   
   if (!userData) {

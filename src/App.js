@@ -30,7 +30,8 @@ function App() {
                 alert("The server is currently down. Please try logging in again once the server is back online.");
             }
             setUserData(null);
-            localStorage.clear(); // Clear session storage (adjust if you meant localStorage)
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('user');
         }
     };
 

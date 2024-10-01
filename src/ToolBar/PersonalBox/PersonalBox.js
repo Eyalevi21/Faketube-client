@@ -6,44 +6,53 @@ const PersonalBox = ({ userData, setUserData, token, setToken }) => {
   const [showButtons, setShowButtons] = useState(false);
   const [nickname, setNickname] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [username, setUsername] = useState(localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).username : null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const storedUserData = localStorage.getItem('user');
-    if (storedUserData) {
-      setUserData(JSON.parse(storedUserData));
+    const storedToken = localStorage.getItem('jwt'); // Assuming token is stored under 'jwt'
+    if (storedUserData && storedToken) {
+      const userData = JSON.parse(storedUserData);
+      setUserData(userData);
+      setToken(storedToken);
+      setUsername(userData.username);
+      fetchUserDetails(userData); // Pass userData directly to avoid race condition
     } else {
       setUserData(null);
-      setToken(null)
+      setToken(null);
+      setUsername(null);
       localStorage.removeItem('jwt');
       localStorage.removeItem('user');
     }
-  }, [setUserData]);
+  }, [setUserData, setToken]); // Correct dependency
 
-
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        const response = await fetch(`http://localhost:880/api/users/${userData.username}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': token ? `Bearer ${token}` : '',
-            'Content-Type': 'application/json' // This is optional, but good to include
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
+  const fetchUserDetails = async () => {
+    try {
+      const response = await fetch(`http://localhost:880/api/users/${username}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': token ? `Bearer ${token}` : '',
+          'Content-Type': 'application/json' // This is optional, but good to include
         }
-        const { secondToken, user } = await response.json();
-        setNickname(user.nickname);
-        setProfile(user.profile);
-      } catch (error) {
-        console.error('Error fetching user details:', error);
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
       }
-    };
-    fetchUserDetails();
-  }, [userData]);
+      const { secondToken, user } = await response.json();
+      setNickname(user.nickname);
+      setProfile(user.profile);
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  };
+  useEffect(() => {
+    if (username && token) {
+        fetchUserDetails();
+    }
+}, [username, token]);
+
 
   const handleUploadClick = () => {
     navigate('/Upload');

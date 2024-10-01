@@ -66,11 +66,16 @@ function Login({userData, setUserData }) {
                 localStorage.setItem('user', JSON.stringify(result.user));                
                 setUserData(result.user);
                 navigate('/');
+            } else if (res.status === 404) {
+                setError('User not found');
+            } else if (res.status === 401) {
+                setError('Invalid username or password');
             } else {
-                setError(result.message || 'Login failed');
+                const result = await res.json();
+                setError(result.message || 'An error occurred. Login failed.');
             }
         } catch (err) {
-            setError('An error occurred during login');
+            setError('Invalid username or password');
             console.error('Error logging in:', err);
         }
     };

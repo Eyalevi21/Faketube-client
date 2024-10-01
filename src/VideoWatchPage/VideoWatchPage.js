@@ -45,71 +45,86 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme }) {
       }, [navigate]);
 
     const isConnected = !!userData;
-    useEffect(() => {
-        const fetchVideos = async () => {
-            setLoading(true); // Start loading
-            try {
-                const response = await fetch('http://localhost:880/api/videos', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
-                    }
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setVideoList(data);
-                } else {
-                    throw new Error('Failed to fetch videos');
+    const fetchVideoData = async () => {
+        try {
+            const response = await fetch(`http://localhost:880/api/users/${artistName}/videos/${vid}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
                 }
-            } catch (err) {
-                console.error('Error fetching videos:', err);
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch video');
             }
-            finally{
-                setLoading(false); // End loading
-            }
-        };
-
-        fetchVideos();
-    }, []);
-
-
-    useEffect(() => {
-        if (videoList && vid) {
-            const matchingVideo = videoList.find(video => video.vid === vid);
-            if (matchingVideo) {
-                setArtistName(matchingVideo.artist);
-            }
+            const data = await response.json();
+            setVideoData(data);
+        } catch (error) {
+            console.error('Error fetching video:', error);
         }
-    }, [videoList, vid]);
-
-
+    };
     useEffect(() => {
-        const fetchVideoData = async () => {
-            try {
-                const response = await fetch(`http://localhost:880/api/users/${artistName}/videos/${vid}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('Failed to fetch video');
-                }
-                const data = await response.json();
-                setVideoData(data);
-            } catch (error) {
-                console.error('Error fetching video:', error);
-            }
-        };
+        if (vid) {
+            // Every time the vid parameter changes, do something with it (like fetching video data)
+            console.log("Vid updated:", vid);
+            fetchVideoData(); // Example function to fetch video based on vid
+        }
+    }, [vid]);
+    useEffect(() => {
+        // Wait until videoData is available before setting artist name
+        if (videoData) {
+            console.log("Setting artist name from videoData:", videoData.artist);
+            setArtistName(videoData.artist);
+        }
+    }, [videoData]);
 
-        fetchVideoData();
+    const fetchSideVideos = async (vid) => {
+        setLoading(true); // Start loading
+        try {
+            const response = await fetch(`http://localhost:880/api/videos/${vid}/sideVideos`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setVideoList(data);
+            } else {
+                throw new Error('Failed to fetch videos');
+            }
+        } catch (err) {
+            console.error('Error fetching videos:', err);
+        } finally {
+            setLoading(false); // End loading
+        }
+    };
+    useEffect(() => {       
+        if (vid) { // Ensure vid is available before fetching
+            fetchSideVideos(vid);
+        }        
     }, [vid]);
 
-    useEffect(() => {
-        if (!artistName) return;
 
+    useEffect(() => {
+        if (videoList && vid) {      
+            console.log("videoData: ", videoData)                
+                console.log("Setting artist name:", videoData.artist); // Add debug logs
+                setArtistName(videoData.artist);
+            }
+        
+    }, [videoData]);
+
+
+    useEffect(() => {
+        if (!artistName) {
+            console.log("Artist name is not yet available", artistName); // Debug log to see the state
+            return; // Early return if artistName is not set yet
+        }
+    
+        console.log("Fetching artist profile for:", artistName); // Add debug log to track
+    
         const fetchArtistProfile = async () => {
             try {
                 const response = await fetch(`http://localhost:880/api/users/${artistName}`, {
@@ -119,26 +134,26 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme }) {
                         ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
                     }
                 });
-
+    
                 if (!response.ok) {
                     throw new Error('Failed to fetch artist profile');
                 }
-
-                const { secondToken, user } = await response.json(); // Get the full user data                
-                // Extract the profile field from the user data
+    
+                const { user } = await response.json();
                 if (user && user.profile) {
-                    setArtistProfile(user.profile); // Set the profile data in your state
+                    console.log("Setting artist profile:", user.profile); // Add debug log to confirm profile setting
+                    setArtistProfile(user.profile);
                 } else {
                     console.error('Profile field is missing in the user data');
                 }
-
             } catch (error) {
                 console.error('Error fetching artist profile:', error);
             }
         };
-
+    
         fetchArtistProfile();
-    }, [artistName]);
+    }, [artistName, token]); // Ensure this runs after artistName and token are available
+    
 
 
     useEffect(() => {
@@ -274,6 +289,15 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme }) {
 
 
     const handleCommentSubmit = async () => {
+        if (!tokenValid) {
+            const confirmSignIn = window.confirm('In order to comment, you have to sign in. Do you want to sign in now?');
+            if (confirmSignIn) {
+                navigate('/login'); // Redirect to login page if user agrees
+                return
+            } else {
+                return; // Do nothing if user declines
+            }
+        }
         try {
             const response = await fetch(`http://localhost:880/api/videos/${vid}/comments`, {
                 method: 'POST',

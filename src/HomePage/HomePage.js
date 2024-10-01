@@ -25,36 +25,36 @@ function HomePage({ theme, toggleTheme, userData, setUserData}) {
   }, [setUserData]);
 
   // Fetch videos from the server when the component mounts
-  useEffect(() => {
-    const fetchVideos = async () => {
-      try {    
-        const response = await fetch('http://localhost:880/api/videos', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
-          }
-        });
-  
-        if (response.ok) {
-          const data = await response.json();
-          setVideos(data);
-        } else {
-          throw new Error('Failed to fetch videos');
+  const fetchVideos = async () => {
+    try {    
+      const response = await fetch('http://localhost:880/api/videos', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
         }
-      } catch (err) {
-        console.error('Error fetching videos:', err);
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setVideos(data);
+      } else {
+        throw new Error('Failed to fetch videos');
       }
-    };
-  
+    } catch (err) {
+      console.error('Error fetching videos:', err);
+    }
+  };
+
+  useEffect(() => { 
     fetchVideos();
   }, []);
   
   return (
     <div className = "home-page-con">
-      <SideMenu theme={theme} toggleTheme={toggleTheme} userData={userData}/>
+      <SideMenu theme={theme} toggleTheme={toggleTheme} userData={userData} setVideos={setVideos} fetchVideos={fetchVideos}/>
       <div className="HomePage">
-        <ToolBar  setToken={setToken} token={token} theme={theme} toggleTheme={toggleTheme} userData={userData} setUserData={setUserData} setVideos={setVideos} />
+        <ToolBar  setToken={setToken} token={token} theme={theme} toggleTheme={toggleTheme} userData={userData} setUserData={setUserData} setVideos={setVideos} fetchVideos={fetchVideos} />
         <div className="user-info">
           {/* Display user info as needed */}
         </div>

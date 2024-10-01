@@ -49,11 +49,21 @@ function Reg() {
       return; // Stop further form submission processing
     }
     
+    if (formState.password.length < 8) {
+      alert('Password must be at least 8 characters long.');
+      return
+    }
+    if (formState.verifypass !== formState.password) {
+      alert('Passwords do not match');
+      return
+    }
+
     // Validate fields before submitting
     if (!validateFields()) {
       alert('Please fill in all the required fields.');
       return;
     }
+
 
     const data = {
       username: formState.username,
@@ -70,8 +80,11 @@ function Reg() {
         body: JSON.stringify(data)
       });
 
-      if (!res.ok) {
-        throw new Error('Error creating user');
+      if (res.status === 409) {
+        alert('Username already exists');
+        return;
+      } else if (!res.ok) {
+        throw new Error('Error creating user, please try again later.');
       }
 
       // If a profile image is selected, upload it

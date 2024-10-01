@@ -69,6 +69,8 @@
 .video-container video {
     width: 100%;
     height: auto;
+    max-width: 1361.11px; /* Set the maximum width */
+    max-height: 970px; 
     margin-bottom: 20px;
 }
 
@@ -160,22 +162,24 @@ textarea:focus {
     display: inline-block;
     width: 16px;
     height: 16px;
-    background-image: url('../data/icons/edit.svg');
+    background-image: url('../data/icons/pen.png');
     background-size: cover;
     cursor: pointer;
     margin-left: 10px; /* Adjust spacing as needed */
     vertical-align: middle; /* Align the icon with text */
+    color: var(--text-color);
 }
 
 .icon-save {
     display: inline-block;
     width: 16px;
     height: 16px;
-    background-image: url('../data/icons/save.svg');
+    background-image: url('../data/icons/save.png');
     background-size: cover;
     cursor: pointer;
     margin-left: 10px; /* Adjust spacing as needed */
     vertical-align: middle; /* Align the icon with text */
+    color: var(--text-color) !important;
 }
 h2{
     color: var(--text-color);
