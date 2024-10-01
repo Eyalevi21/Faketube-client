@@ -85,8 +85,8 @@ function App() {
     <BrowserRouter>
     <Routes>
     <Route path="/" element= {<HomePage userData = {userData} setUserData={setUserData} theme={theme} toggleTheme={toggleTheme} fetchVideos={fetchVideos}  videos={videos}  setVideos={setVideos} /> }/>
-      <Route path="/login" element={<Login userData = {userData} setUserData={setUserData} theme={theme} toggleTheme={toggleTheme}/> } />
-      <Route path="/register" element={<Reg theme={theme} toggleTheme={toggleTheme}/> } />
+      <Route path="/login" element={<Login userData = {userData} setUserData={setUserData} theme={theme} toggleTheme={toggleTheme} fetchVideos={fetchVideos}/> } />
+      <Route path="/register" element={<Reg theme={theme} toggleTheme={toggleTheme} fetchVideos={fetchVideos}/> } />
       <Route path="/welcome" element={<Welcome/> } />  
       <Route path="/videos/:vid" element={<VideoWatchPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} setVideos={setVideos} fetchVideos={fetchVideos} />} />
       <Route path="/user/:username" element={<UserPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} setVideos={setVideos}  fetchVideos={fetchVideos} />} />

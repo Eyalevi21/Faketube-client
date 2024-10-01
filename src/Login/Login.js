@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
-function Login({userData, setUserData }) {
+function Login({userData, setUserData, fetchVideos }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -62,6 +62,7 @@ function Login({userData, setUserData }) {
             const result = await res.json();
     
             if (res.ok) {
+                await fetchVideos();
                 localStorage.setItem('jwt', result.token);
                 localStorage.setItem('user', JSON.stringify(result.user));                
                 setUserData(result.user);

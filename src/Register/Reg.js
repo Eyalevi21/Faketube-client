@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import formConfig from '../data/regProp.json';
 import './Reg.css';
 
-function Reg() {
+function Reg({fetchVideos}) {
   const navigate = useNavigate();
   const initialState = formConfig.reduce((acc, field) => {
     acc[field.id] = field.initialValue;
@@ -106,6 +106,7 @@ function Reg() {
       } else {
         alert('User registered successfully');
       }
+      await fetchVideos();
       navigate('/');  // Redirect after successful registration
     } catch (error) {
       alert(error.message);
