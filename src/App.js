@@ -89,7 +89,7 @@ function App() {
       <Route path="/register" element={<Reg theme={theme} toggleTheme={toggleTheme}/> } />
       <Route path="/welcome" element={<Welcome/> } />  
       <Route path="/videos/:vid" element={<VideoWatchPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} setVideos={setVideos} fetchVideos={fetchVideos} />} />
-      <Route path="/user/:username" element={<UserPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} />} />
+      <Route path="/user/:username" element={<UserPage setUserData={setUserData} userData={userData} setSearchResult={setSearchResult} theme={theme} toggleTheme={toggleTheme} setVideos={setVideos}  fetchVideos={fetchVideos} />} />
       <Route path="/upload" element={<Upload  theme={theme} toggleTheme={toggleTheme} />} />
       <Route path="/upload-details" element={<UploadDetails  userData={userData}   theme={theme} toggleTheme={toggleTheme} />} />
       <Route path="/video-watch/:id" element={<VideoWatchPage setUserData={setUserData} userData={userData} theme={theme} toggleTheme={toggleTheme} setVideos={setVideos} />} />

@@ -10,7 +10,7 @@ import './UserPage.css'
 import '../HomePage/HomePage.css'
 
 
-function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }) {
+function UserPage({ userData, setUserData, theme, toggleTheme, setVideos, fetchVideos }) {
     const { username } = useParams();
     const { doSearch } = MyComponent();
     const [videoData, setVideoData] = useState(null);
@@ -303,9 +303,9 @@ function UserPage({ userData, setUserData, theme, toggleTheme, setSearchResult }
     const isConnected = !!userData;
     return (
         <div className="home-page-con">
-            <SideMenu userData={userData} />
+            <SideMenu userData={userData} fetchVideos={fetchVideos} />
             <div className="HomePage">
-                <ToolBar theme={theme} toggleTheme={toggleTheme} userData={userData} setUserData={setUserData} token={token} setToken={setToken} />
+                <ToolBar theme={theme} toggleTheme={toggleTheme} userData={userData} setUserData={setUserData} token={token} setToken={setToken} setVideos={setVideos} fetchVideos={fetchVideos} />
                 <div className="user-details-container">
                     {userDetails && (
                         <div className="user-details">
