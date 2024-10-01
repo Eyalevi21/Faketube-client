@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 
-function VideoWatchPage({ userData, setUserData, theme, toggleTheme }) {
+function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setVideos, fetchVideos }) {
     const [loading, setLoading] = useState(true); // Add loading state
     const navigate = useNavigate();
     const { vid } = useParams();
@@ -377,7 +377,9 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme }) {
                 toggleTheme={toggleTheme}
                 doSearch={doSearch}
                 userData={userData}
-                setUserData={setUserData}               
+                setUserData={setUserData}
+                setVideos={setVideos}
+                fetchVideos={fetchVideos}               
             />
             <div className="main-content">
                 <div className="video-watch-page">

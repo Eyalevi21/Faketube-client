@@ -15,6 +15,7 @@ function ToolBar({userData, setUserData, theme, toggleTheme, setVideos, token, s
     if (location.pathname === '/') {
       fetchVideos();  // Call fetchVideos directly if already on the home page
   } else {
+      fetchVideos();
       navigate('/');  // Navigate to home page if not already there
   }
   }

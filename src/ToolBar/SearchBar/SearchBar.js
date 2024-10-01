@@ -27,8 +27,7 @@ import { useNavigate } from "react-router-dom";
             'Content-Type': 'application/json',
             ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
           }
-        });
-    
+        });        
         if (response.ok) {
           const data = await response.json();
           setVideos(data); // Set the fetched videos
@@ -36,8 +35,8 @@ import { useNavigate } from "react-router-dom";
           throw new Error('Failed to fetch videos');
         }
     
-        // After fetching, navigate to home
-        navigate('/');
+        // After fetching, navigate to home 
+        navigate('/');           
       } catch (err) {
         console.error('Error fetching videos:', err);
       }

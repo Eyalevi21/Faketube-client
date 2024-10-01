@@ -11,6 +11,7 @@ function SideMenu({ userData, fetchVideos}) {
         if (location.pathname === '/') {
             fetchVideos();  // Call fetchVideos directly if already on the home page
         } else {
+            fetchVideos();
             navigate('/');  // Navigate to home page if not already there
         }
     };

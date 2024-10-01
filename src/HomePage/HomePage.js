@@ -5,8 +5,7 @@ import SideMenu from './SideMenu/SideMenu';
 import './HomePage.css';
 
 
-function HomePage({ theme, toggleTheme, userData, setUserData}) {
-  const [videos, setVideos] = useState([]);
+function HomePage({ theme, toggleTheme, userData, setUserData, videos, setVideos, fetchVideos}) {  
   const [token, setToken] = useState(() => localStorage.getItem('jwt') || null);
   useEffect(() => {
     const storedToken = localStorage.getItem('jwt');
@@ -25,30 +24,9 @@ function HomePage({ theme, toggleTheme, userData, setUserData}) {
   }, [setUserData]);
 
   // Fetch videos from the server when the component mounts
-  const fetchVideos = async () => {
-    try {    
-      const response = await fetch('http://localhost:880/api/videos', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
-        }
-      });
 
-      if (response.ok) {
-        const data = await response.json();
-        setVideos(data);
-      } else {
-        throw new Error('Failed to fetch videos');
-      }
-    } catch (err) {
-      console.error('Error fetching videos:', err);
-    }
-  };
 
-  useEffect(() => { 
-    fetchVideos();
-  }, []);
+ 
   
   return (
     <div className = "home-page-con">
