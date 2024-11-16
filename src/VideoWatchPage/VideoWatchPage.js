@@ -32,17 +32,17 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setVideos, 
         const storedToken = localStorage.getItem('jwt');
         const storedUserData = localStorage.getItem('user');
         if (storedToken && storedUserData) {
-          // JWT and userData exist, set userData from localStorage
-          setUserData(JSON.parse(storedUserData));
-          setToken(storedToken);
+            // JWT and userData exist, set userData from localStorage
+            setUserData(JSON.parse(storedUserData));
+            setToken(storedToken);
         } else {
-          // JWT does not exist, clear userData and token
-          setUserData(null);
-          setToken(null)
-          localStorage.removeItem('jwt');
-          localStorage.removeItem('user');
+            // JWT does not exist, clear userData and token
+            setUserData(null);
+            setToken(null)
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('user');
         }
-      }, [navigate]);
+    }, [navigate]);
 
     const isConnected = !!userData;
     const fetchVideoData = async () => {
@@ -100,20 +100,20 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setVideos, 
             setLoading(false); // End loading
         }
     };
-    useEffect(() => {       
+    useEffect(() => {
         if (vid) { // Ensure vid is available before fetching
             fetchSideVideos(vid);
-        }        
+        }
     }, [vid]);
 
 
     useEffect(() => {
-        if (videoList && vid) {      
-            console.log("videoData: ", videoData)                
-                console.log("Setting artist name:", videoData.artist); // Add debug logs
-                setArtistName(videoData.artist);
-            }
-        
+        if (videoList && vid) {
+            console.log("videoData: ", videoData)
+            console.log("Setting artist name:", videoData.artist); // Add debug logs
+            setArtistName(videoData.artist);
+        }
+
     }, [videoData]);
 
 
@@ -122,9 +122,9 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setVideos, 
             console.log("Artist name is not yet available", artistName); // Debug log to see the state
             return; // Early return if artistName is not set yet
         }
-    
+
         console.log("Fetching artist profile for:", artistName); // Add debug log to track
-    
+
         const fetchArtistProfile = async () => {
             try {
                 const response = await fetch(`http://localhost:880/api/users/${artistName}`, {
@@ -134,11 +134,11 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setVideos, 
                         ...(token ? { 'Authorization': `Bearer ${token}` } : {}) // Add Authorization header if token exists
                     }
                 });
-    
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch artist profile');
                 }
-    
+
                 const { user } = await response.json();
                 if (user && user.profile) {
                     console.log("Setting artist profile:", user.profile); // Add debug log to confirm profile setting
@@ -150,10 +150,10 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setVideos, 
                 console.error('Error fetching artist profile:', error);
             }
         };
-    
+
         fetchArtistProfile();
     }, [artistName, token]); // Ensure this runs after artistName and token are available
-    
+
 
 
     useEffect(() => {
@@ -259,7 +259,7 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setVideos, 
             console.log('No token to verify');
             return;
         }
-    
+
         try {
             const response = await fetch('http://localhost:880/api/tokens/verify-token', {
                 method: 'GET',
@@ -267,9 +267,9 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setVideos, 
                     'Authorization': `Bearer ${token}`
                 }
             });
-    
+
             const data = await response.json();
-            
+
             if (data.valid) {
                 setTokenValid(true);
             } else {
@@ -344,9 +344,9 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setVideos, 
                     newReaction: reactionType,
                 }),
             });
-            
+
             const data = await response.json();
-            
+
             if (response.ok) {
                 setLikes(data.likes);
                 setUnlikes(data.unlikes);
@@ -360,8 +360,27 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setVideos, 
 
 
 
-    //works without it (to check)
-    //const videoSrc = videoFile && videoFile.startsWith('blob:') ? videoFile : `/videofiles/${videoFile}`;
+    // Notify server when the video starts playing
+    function notifyVideoWatch(username, vid) {
+        fetch('http://localhost:880/api/video-watched', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, vid }),
+        })
+            .then((response) => response.json())
+            .then((data) => console.log('Video watch notified:', data))
+            .catch((error) => console.error('Error notifying video watch:', error));
+    }
+
+
+    const handleVideoPlay = () => {
+        if (token && userData) {
+            notifyVideoWatch(userData.username, vid);
+        };
+    }
+
 
 
     if (!videoData) {
@@ -379,19 +398,24 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setVideos, 
                 userData={userData}
                 setUserData={setUserData}
                 setVideos={setVideos}
-                fetchVideos={fetchVideos}               
+                fetchVideos={fetchVideos}
             />
             <div className="main-content">
                 <div className="video-watch-page">
                     <div className="video-container">
-                        <video ref={videoRef} width="250" controls>
+                        <video
+                            ref={videoRef}
+                            width="250"
+                            controls
+                            onPlay={handleVideoPlay}
+                        >
                             <source src={`http://localhost:880/videofiles/${videoFile}`} type="video/mp4" />
                         </video>
 
                         <div className="artist-container">
                             <div className="artist-info">
                                 <img
-                                    src={`http://localhost:880/profileImages/${artistProfile}`}      
+                                    src={`http://localhost:880/profileImages/${artistProfile}`}
                                     alt="Artist"
                                     className="artist-image"
                                     onClick={() => {
@@ -473,24 +497,24 @@ function VideoWatchPage({ userData, setUserData, theme, toggleTheme, setVideos, 
                 </div>
 
                 <div className="related-videos">
-  {loading ? (
-    <p>Loading videos...</p>  // Display a loading message or spinner while fetching
-  ) : videoList && videoList.length > 0 ? (
-    videoList.map((video) => (
-      <MiniVideoItem
-        key={video.vid} // Always include a unique key when mapping components
-        vid={video.vid}
-        imageName={video.imageName}
-        title={video.title}
-        artist={video.artist}
-        views={video.views}
-        date={video.date}
-      />
-    ))
-  ) : (
-    <p>No related videos found</p> // Display a fallback if no videos are found
-  )}
-</div>
+                    {loading ? (
+                        <p>Loading videos...</p>  // Display a loading message or spinner while fetching
+                    ) : videoList && videoList.length > 0 ? (
+                        videoList.map((video) => (
+                            <MiniVideoItem
+                                key={video.vid} // Always include a unique key when mapping components
+                                vid={video.vid}
+                                imageName={video.imageName}
+                                title={video.title}
+                                artist={video.artist}
+                                views={video.views}
+                                date={video.date}
+                            />
+                        ))
+                    ) : (
+                        <p>No related videos found</p> // Display a fallback if no videos are found
+                    )}
+                </div>
 
             </div>
         </div>
